@@ -41,10 +41,10 @@ class MenuController extends CI_Controller {
         $this->load->view('menu/addsub'); 
 	}
 
-		public function addcourse1()
+		public function addcourse()
 	{
 		$this->load->helper('url'); 
-        $this->load->view('menu/addcourse1'); 
+        $this->load->view('menu/addcourse'); 
 	}
 
 		public function adddept()

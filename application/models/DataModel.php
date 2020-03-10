@@ -17,7 +17,7 @@
         }
       }
 
-        public function addcourse1($data) { 
+        public function addcourse($data) { 
          if ($this->db->insert("course_tbl", $data)) { 
             return true; 
          }  

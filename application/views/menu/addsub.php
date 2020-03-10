@@ -81,7 +81,7 @@ $this->load->view('components/sidemenu');
               <input type="subname" id="subname" name="subname" class="form-control" type="text" placeholder="Enter sub">         
          </div>
           <div class="col-xs-2">
-          <button type="button" class="btn btn-block btn-primary add_btn">Add</button>
+          <button type="button" class="btn btn-block btn-primary add_sub">Add</button>
           </div>
         </div>
         <!-- /.box-body -->
@@ -127,7 +127,7 @@ $this->load->view('components/sidebarcontroller');
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
   $(document).ready(function() {
-   $('.add_btn').click(function(){
+   $('.add_sub').click(function(){
             
                 $.ajax({
                     type: "POST",

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 10, 2020 at 12:21 PM
--- Server version: 10.4.6-MariaDB
--- PHP Version: 7.3.8
+-- Host: 127.0.0.1
+-- Generation Time: Mar 10, 2020 at 06:30 PM
+-- Server version: 10.1.38-MariaDB
+-- PHP Version: 7.1.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,26 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `stud`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `allsub_tb`
---
-
-CREATE TABLE `allsub_tb` (
-  `subcode` int(10) NOT NULL,
-  `subjectname` varchar(20) DEFAULT NULL,
-  `f_crse_id` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `allsub_tb`
---
-
-INSERT INTO `allsub_tb` (`subcode`, `subjectname`, `f_crse_id`) VALUES
-(1, NULL, 0),
-(2, 'maths', 0);
 
 -- --------------------------------------------------------
 
@@ -79,7 +59,12 @@ INSERT INTO `course_tbl` (`crse_id`, `crse_name`, `f_dept_id`) VALUES
 (1236, 'bba', 0),
 (1237, 'bba', 0),
 (1238, 'bsw', 0),
-(1239, NULL, 0);
+(1239, NULL, 0),
+(1240, 'sdsdfd', 0),
+(1241, 'fdvdfvdf', 0),
+(1242, 'svsdsdf', 0),
+(1243, 'vdvsfd', 0),
+(1244, 'hgfhg', 0);
 
 -- --------------------------------------------------------
 
@@ -98,6 +83,25 @@ CREATE TABLE `dept_tbl` (
 
 INSERT INTO `dept_tbl` (`dept_id`, `dept_name`) VALUES
 (1, 'computer science');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mains_tbl`
+--
+
+CREATE TABLE `mains_tbl` (
+  `mains_id` int(11) NOT NULL,
+  `mains_name` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mains_tbl`
+--
+
+INSERT INTO `mains_tbl` (`mains_id`, `mains_name`) VALUES
+(1, NULL),
+(2, 0);
 
 -- --------------------------------------------------------
 
@@ -224,12 +228,6 @@ INSERT INTO `usertype_tbl` (`utype_id`, `usertype`) VALUES
 --
 
 --
--- Indexes for table `allsub_tb`
---
-ALTER TABLE `allsub_tb`
-  ADD PRIMARY KEY (`subcode`);
-
---
 -- Indexes for table `attendance_tbl`
 --
 ALTER TABLE `attendance_tbl`
@@ -246,6 +244,12 @@ ALTER TABLE `course_tbl`
 --
 ALTER TABLE `dept_tbl`
   ADD PRIMARY KEY (`dept_id`);
+
+--
+-- Indexes for table `mains_tbl`
+--
+ALTER TABLE `mains_tbl`
+  ADD PRIMARY KEY (`mains_id`);
 
 --
 -- Indexes for table `marklist_tbl`
@@ -279,12 +283,6 @@ ALTER TABLE `usertype_tbl`
 --
 
 --
--- AUTO_INCREMENT for table `allsub_tb`
---
-ALTER TABLE `allsub_tb`
-  MODIFY `subcode` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `attendance_tbl`
 --
 ALTER TABLE `attendance_tbl`
@@ -294,7 +292,7 @@ ALTER TABLE `attendance_tbl`
 -- AUTO_INCREMENT for table `course_tbl`
 --
 ALTER TABLE `course_tbl`
-  MODIFY `crse_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1240;
+  MODIFY `crse_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1245;
 
 --
 -- AUTO_INCREMENT for table `dept_tbl`

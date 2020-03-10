@@ -37,7 +37,7 @@
               <a href="<?php echo site_url('menu/addsub'); ?>"><i class="fa fa-circle-o"></i>Add sub</a>
             </li>
             <li>
-              <a href="<?php echo site_url('menu/addcourse1'); ?>"><i class="fa fa-circle-o"></i>Add course</a>
+              <a href="<?php echo site_url('menu/addcourse'); ?>"><i class="fa fa-circle-o"></i>Add course</a>
             </li>
             <li>
               <a href="<?php echo site_url('menu/adddept'); ?>"><i class="fa fa-circle-o"></i>Add dept </a></li>

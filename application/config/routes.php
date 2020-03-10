@@ -65,14 +65,14 @@ $route['indexoption/register'] = 'IndexoptionController/register';
 
 $route['menu'] = 'MenuController';
 $route['menu/addsub']='MenuController/addsub';
-$route['menu/addcourse1']='MenuController/addcourse1';
+$route['menu/addcourse']='MenuController/addcourse';
 $route['menu/adddept'] = 'MenuController/adddept';
 $route['menu/addutype'] = 'MenuController/addutype';
 $route['menu/addallsub']='MenuController/addallsub';
 
 
 $route['data/addsub'] = 'DataController/addsub';
-$route['data/addcourse1'] = 'DataController/addcourse1';
+$route['data/addcourse'] = 'DataController/addcourse';
 $route['data/adddept'] = 'DataController/adddept';
 $route['data/addutype'] = 'DataController/addutype';
 $route['data/addallsub']='DataController/addallsub';
