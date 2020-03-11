@@ -149,7 +149,7 @@ $this->load->view('components/sidemenu');
 
 
 
-<form name="updatetaskform" id="updatetaskform">
+<form name="updatesubjectform" id="updatesubjectform">
   <!-- /.content-wrapper -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -313,7 +313,7 @@ $('.delete_btn').click(function(){
          
          $.ajax({
              type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/subject_delete",
+             url: "<?php echo site_url(); ?>/mdata/subjectdelete",
              dataType : "json",
              data: {"sub_id" : sub_id},
              success: function(response){
@@ -339,38 +339,38 @@ $('.delete_btn').click(function(){
              })
    
     });//update view in modal
-// $('.update_btn').click(function(){
+$('.update_btn').click(function(){
      
-//          $.ajax({
-//              type: "POST",
-//              url: "<?php echo site_url(); ?>/task/task_update",
-//              data: $('#updatetaskform').serialize(),
-//              dataType: "json",
-//              success: function(response){
-//              // alert(response);  
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/subjectupdate",
+             data: $('#updatesubjectform').serialize(),
+             dataType: "json",
+             success: function(response){
+             // alert(response);  
 
-//                       //console.log(response.status);
-//                  if(response==true) //if success close modal and reload ajax table
-//                    {
-//                   $("#myModal").modal("hide");
-//                    toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
-//                    table.ajax.reload(null,false); //reload datatable ajax 
+                  console.log(response);
+                 if(response==true) //if success close modal and reload ajax table
+                   {
+                  $("#myModal").modal("hide");
+                   toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                   table.ajax.reload(null,false); //reload datatable ajax 
              
-//                    }
-//                  else{
-//                     $("#myModal").modal("hide");
-//                    toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-//                  }
+                   }
+                 else{
+                    $("#myModal").modal("hide");
+                   toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                 }
 
-//                  },
-//                  error: function(xhr, textStatus, error) {
-//                    console.log(xhr.statusText);
-//                    console.log(textStatus);
-//                    console.log(error);
-//                  }
-//              })
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
    
-//         });//update action
+        });//update action
 
       }//fnDrawCallback
 

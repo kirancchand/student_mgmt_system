@@ -201,25 +201,24 @@ $('.assign_subject').click(function(){
                     dataType: "json",
                     success: function(response){
                        
-                       console.log(response);
+                      //  console.log(response);
                        
                         //console.log(response.status);
-                        // if(response==true) //if success close modal and reload ajax table
-                        //   {                     
-                        //    toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
-                        //    //$('#assignbinmemberform')[0].reset();
-                        //      $('#busno').val('0').trigger("change");
-                        //      $("#routes").multiselect('deselectAll', false);
+                        if(response==true) //if success close modal and reload ajax table
+                          {                     
+                           toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
+                             $('#assignsubjectform')[0].reset();
+                            //  $(".select2").multiselect('clearSelection');
                             
-                        //           //$("#bin_number")[0].selectedIndex = 0;
+                            // $(".select2")[0].selectedIndex = 0;
                             
-                        //    //$("#bin_number").multiselect('clearSelection');
-                        //   }
-                        // else
-                        //   { 
-                        //     toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
+                           //$("#bin_number").multiselect('clearSelection');
+                          }
+                        else
+                          { 
+                            toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
 
-                        //   }
+                          }
                         
                        
                         },

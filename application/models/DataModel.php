@@ -179,8 +179,18 @@
            return $this->db->count_all_results();
        }
 
-
-
+    public function subjectDelete($sub_id) 
+       { 
+         $this->db->where('sub_id',$sub_id);
+          $result=$this->db->delete('subject_tbl');
+          return $result; 
+       }
+   public function subjectUpdate($data,$id) 
+       { 
+         $this->db->where('sub_id',$id);
+          $result=$this->db->update('subject_tbl',$data);
+          return $result; 
+       }
 
 
      } 

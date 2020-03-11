@@ -80,6 +80,7 @@ $route['tdata/getsubjectdata'] = 'DataController/getsubjectData';
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';
+$route['mdata/subjectupdate'] = 'DataController/subjectupdate';
 
 $route['menudata/singletable'] = 'DataController/singletable';
 $route['datacollection/datatablegetconnectivitydata'] = 'DataController/datatablegetconnectivitydata';

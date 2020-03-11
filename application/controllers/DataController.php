@@ -230,6 +230,24 @@ class dataController extends CI_Controller {
         echo json_encode($result);
   }
 
+  public function subjectdelete()
+  {
+        $sub_id = $this->input->post('sub_id');
+        $result=$this->DataModel->subjectDelete($sub_id);
+        echo json_encode($result);
+  }
+
+  public function subjectupdate()
+  {
+        $sub_id = $this->input->post('id');
+        $subject_name = $this->input->post('subject_name');
+        $data=array(
+          'sub_name' => $subject_name
+        );
+        $result=$this->DataModel->subjectUpdate($data,$sub_id);
+        echo json_encode($result);
+  }
+
 
 
 
