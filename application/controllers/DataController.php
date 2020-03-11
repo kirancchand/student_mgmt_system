@@ -141,28 +141,22 @@ class dataController extends CI_Controller {
       public function addcourse1()
   {
 
-    //     //$this->load->view('menu/addBusno');
-       
-    //     // $courseid = $this->input->post('crseid');
-    //     $coursename = $this->input->post('crsename');
-    //     // echo $courseid;
-    //     // echo $coursename;
-    //     $data=array(
-    //       // 'crse_id' => $courseid,
-    //       'crse_name' => $coursename,
-    //     ); 
-    //     $result=$this->busmodel->addcourse1($data);
-    //     print_r($result);
-    // if ($result == true) 
+        $coursename = $this->input->post('crsename');
+        $data=array(
+          'crse_name' => $coursename,
+        ); 
+        $result=$this->busmodel->addcourse1($data);
+        print_r($result);
+    if ($result == true) 
     
 
-    // {  
-    //   $this->load->view('menu/addcourse1');
-    // }
-    // else
-    // {
-    //   $this->load->view('index');
-    // }
+    {  
+      $this->load->view('menu/addcourse1');
+    }
+    else
+    {
+      $this->load->view('index');
+    }
   }
 
   public function adddept()
