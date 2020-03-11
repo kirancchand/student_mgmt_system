@@ -25,6 +25,8 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.css">
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -81,7 +83,7 @@ $this->load->view('components/sidemenu');
               <input type="subname" id="subname" name="subname" class="form-control" type="text" placeholder="Enter sub">         
          </div>
           <div class="col-xs-2">
-          <button type="button" class="btn btn-block btn-primary add_btn">Add</button>
+          <button type="button" class="btn btn-block btn-primary add_sub">Add</button>
           </div>
         </div>
         <!-- /.box-body -->
@@ -95,6 +97,103 @@ $this->load->view('components/sidemenu');
 
     </section>
     <!-- /.content -->
+    <section class="content">
+
+<!-- Default box -->
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title">Subject List</h3>
+
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+        <i class="fa fa-minus"></i></button>
+      <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+        <i class="fa fa-times"></i></button>
+    </div>
+  </div>
+  <div class="box-body">
+      <div class="row">
+        <div class="col-xs-12">
+        <div class="form-group">
+         <table class="table table-bordered" id="mytable">
+           <thead>
+            <tr>
+            <th style="width: 10px">slno</th>
+            <th>Subject Name</th>
+            <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+  
+          </tbody>
+        </table>
+      </div>
+      </div>
+      </div>
+
+
+
+
+       
+  </div>
+  <!-- /.box-body -->
+  <div class="box-footer clearfix">
+
+  </div>
+  <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+</section>
+
+
+
+
+<form name="updatetaskform" id="updatetaskform">
+  <!-- /.content-wrapper -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Update Subject</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <div class="form-group has-feedback">
+            <label>Subject Name</label>
+        <input type="text" name="subject_name" id="subject_name" class="form-control"  required="required" autofocus="autofocus">
+        </div>
+        <div class="form-group has-feedback">
+         <!-- <label>id</label> -->
+        <input type="text" name="id" id="id" class="form-control">
+        </div>
+
+        </p>
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="btn-group">
+          <button type="button" class="btn btn-info update_btn">Update</button></div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</form>
+
+
+
+
+
+
+
+
+
   </div>
   <!-- /.content-wrapper -->
 
@@ -124,10 +223,12 @@ $this->load->view('components/sidebarcontroller');
 <script src="<?php echo base_url(); ?>public/dist/js/demo.js"></script>
 <!---Custom js--->
 <script src="<?php echo base_url(); ?>public/custom/js/script.js"></script>
+<script src="<?php echo base_url(); ?>public/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
   $(document).ready(function() {
-   $('.add_btn').click(function(){
+   $('.add_sub').click(function(){
             
                 $.ajax({
                     type: "POST",
@@ -155,7 +256,132 @@ $this->load->view('components/sidebarcontroller');
           
           });//update action
 
+    //datatables
+  var table = $('#mytable').DataTable({ 
+ 
+ "processing": true, //Feature control the processing indicator.
+ "serverSide": true, //Feature control DataTables' server-side processing mode.
+ "order": [], //Initial no order.
+
+ // Load data for the table's content from an Ajax source
+ "ajax": {
+     "url": "<?php echo site_url("tdata/getsubjectdata")?>",
+     "type": "GET"
+ },
+
+ //Set column definition initialisation properties.
+ "columnDefs": [
+ { 
+     "targets": [ -1 ], //last column
+     "orderable": false, //set not orderable
+ },
+ ],
+ "fnDrawCallback": function(oSettings){
+
+
+   $('.updateview_btn').click(function(){
+             
+//                       $(".update_btn").show();
+                   var sub_id=$(this).attr('id'); 
+         
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/getmodelsubject",
+             dataType : "json",
+             data: {"sub_id" : sub_id},
+             success: function(response){
+
+                   console.log(response);
+                   $('#subject_name').val(response[0].sub_name);
+                   $('#id').val(response[0].sub_id);
+                   $('#id').hide();
+            
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
+   
+    });//update view in modal
+
+$('.delete_btn').click(function(){
+             
+//                       $(".update_btn").show();
+                   var sub_id=$(this).attr('id'); 
+         
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/subject_delete",
+             dataType : "json",
+             data: {"sub_id" : sub_id},
+             success: function(response){
+
+              if(response==true) //if success close modal and reload ajax table
+                       {
+                      
+                       toastr.success('deleted Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                       table.ajax.reload(null,false); //reload datatable ajax 
+                 
+                       }
+                     else{
+                     
+                       toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                     }
+            
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
+   
+    });//update view in modal
+// $('.update_btn').click(function(){
+     
+//          $.ajax({
+//              type: "POST",
+//              url: "<?php echo site_url(); ?>/task/task_update",
+//              data: $('#updatetaskform').serialize(),
+//              dataType: "json",
+//              success: function(response){
+//              // alert(response);  
+
+//                       //console.log(response.status);
+//                  if(response==true) //if success close modal and reload ajax table
+//                    {
+//                   $("#myModal").modal("hide");
+//                    toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+//                    table.ajax.reload(null,false); //reload datatable ajax 
+             
+//                    }
+//                  else{
+//                     $("#myModal").modal("hide");
+//                    toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+//                  }
+
+//                  },
+//                  error: function(xhr, textStatus, error) {
+//                    console.log(xhr.statusText);
+//                    console.log(textStatus);
+//                    console.log(error);
+//                  }
+//              })
+   
+//         });//update action
+
+      }//fnDrawCallback
+
+      });
+
+
+
+
   });
+
+
 
  
 

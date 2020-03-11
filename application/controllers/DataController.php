@@ -23,11 +23,8 @@ class dataController extends CI_Controller {
          $this->load->database();  
          $this->load->model('UserModel'); 
          $this->load->model('DataModel'); 
-        //  $this->load->model('busmodel');
          $this->load->library('datatables'); //load library ignited-dataTable
-  
-  
-         //$this->load->library('Datatables','session');
+
       } 
 
  public function get_place()
@@ -41,6 +38,47 @@ class dataController extends CI_Controller {
       echo $this->busmodel->get_all_product();
   }
  
+  public function getsubjectData()
+  {
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+
+   $subject_result=$this->DataModel->getsubjectData();
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($subject_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->sub_name;
+              $row[] = '
+              <button type="button" id="'.$r->sub_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+              <button type="button" id="'.$r->sub_id.'"  class="btn btn-danger delete_btn">delete</button';
+              $data[] = $row;
+             
+    }
+
+
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_all(),
+                  "recordsFiltered" => $this->DataModel->count_filtered(),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
+
+
 	public function datatablegetconnectivitydata()
 	{
 
@@ -58,7 +96,7 @@ class dataController extends CI_Controller {
          $no = $start;
 
 
-		foreach($connectivity_data as $r) {
+		     foreach($connectivity_data as $r) {
           	   		  $no++;
             		    $row = array();
                     $row[] = $no;
@@ -138,142 +176,63 @@ class dataController extends CI_Controller {
         echo json_encode($result);
 	}
    
-      public function addcourse1()
+  public function addcourse()
   {
 
         $coursename = $this->input->post('crsename');
         $data=array(
           'crse_name' => $coursename,
         ); 
-        $result=$this->busmodel->addcourse1($data);
-        print_r($result);
-    if ($result == true) 
-    
-
-    {  
-      $this->load->view('menu/addcourse1');
-    }
-    else
-    {
-      $this->load->view('index');
-    }
+        $result=$this->DataModel->addcourse($data);
+        echo json_encode($result);
   }
 
   public function adddept()
   {
 
-    //     //$this->load->view('menu/addBusno');
-       
-    //     // $dptid = $this->input->post('deptid');
-    //     $dptnme = $this->input->post('deptnm');
-    //     // echo $dptid;
-    //     // echo $deptnme;
-     
-    //     $data=array(
-    //       // 'dept_id' => $dptid,
-    //       'dept_name' => $dptnme,
-    //     ); 
-    //     $result=$this->busmodel->adddept($data);
-    // if ($result == true) 
-    // {  
-    //   $this->load->view('menu/adddept');
-    // }
-    // else
-    // {
-    //   $this->load->view('index');
-    // }
+   
+        $dptnme = $this->input->post('deptnm');
+    
+        $data=array(
+          'dept_name' => $dptnme,
+        ); 
+        $result=$this->DataModel->adddept($data);
+        echo json_encode($result);
   }
 
-  
-  public function addallsub()
+
+  public function addusertype()
   {
-
-        //$this->load->view('menu/addallsub');
-       
-     
-    //     $sub = $this->input->post('subname');
-       
-     
-    //     $data=array(
-          
-    //       'subjectname' => $sub,
-    //     ); 
-    //     $result=$this->busmodel->addallsub($data);
-    // if ($result == true) 
-    // {  
-    //   $this->load->view('menu/addallsub');
-    // }
-    // else
-    // {
-    //   $this->load->view('index');
-    // }
+        $usertype = $this->input->post('usertype');
+        $data=array(
+          'usertype' => $usertype,
+        ); 
+        $result=$this->DataModel->addusertype($data);
+        echo json_encode($result);
   }
 
-
-
-
-
-
-
-	  public function addassignbusroute()
+  public function assignsubject()
   {
-    //$this->load->helper('url'); 
-        //$this->load->view('menu/addassignbinmember'); 
-        //$bin_number = $this->input->post('bin_number');  
-       // $members[] = $this->input->post('members'); 
-        //print_r($members);
-      //  $busno = $this->input->post('busno');
-      //  $starttime = $this->input->post('starttime');
-      //  $endtime = $this->input->post('endtime');
-      //  $routes=$this->input->post('routes');
-
-      // $data['f_b_slno']=$busno;
-      // $data['journey_start_time']=$starttime;
-      // $data['journey_end_time']=$endtime;
-      // $bustime_data=$this->busmodel->bustime_data($data);
-      //   //$data = array();/*
-
-      //   foreach( $routes as $key => $value){
-
-      //     $assigndata['f_r_slno'][$key]=$value;
-      //     $assigndata['f_bt_slno']=$bustime_data;
-          
-      //   }
-      //   $busrouteassign_data=$this->busmodel->busrouteassign_data($assigndata);
-
-      //   if($busrouteassign_data)
-      //     echo true;
-        //$binmemberassign_data=$this->BinMemberAssignModel->binmemberassign_data($data);
-      // echo $this->input->post('starttime');
-       //echo json_encode( $routes);
-        //echo json_encode($binmemberassign_data);
-
-        //$this->food_model->add_food($data);
-        /*$data = array( 
-            'username' => $username, 
-            'password' => $pass
-         ); 
-        $result=$this->UserModel->login($data);
-        $connectivity_data=$this->ConnectivityModel->connectivity_data();
-        $data['result']=$connectivity_data;*/
+        $course_id = $this->input->post('course_id');
+        $subject_id = $this->input->post('subject');
+        $data=array(
+          'course_id' => $course_id,
+          'subject_id' => $subject_id
+        ); 
+        $result=$this->DataModel->assignsubject($data);
+        echo json_encode($result);
   }
 
-
-
-
-
-// public function addsub()
-// 	{
-
-//        $this->load->view('menu/addsub');
-      
-// 	}
-public function multipletable()
+  public function getmodelsubject()
   {
-
-       $this->load->view('menu/multipletable');
-      
+        $sub_id = $this->input->post('sub_id');
+        $result=$this->DataModel->getmodelSubject($sub_id);
+        echo json_encode($result);
   }
+
+
+
+
 }
 
 

@@ -24,7 +24,7 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
- 
+  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -66,7 +66,7 @@ $this->load->view('components/sidemenu');
         <div class="box-header with-border">
           <h3 class="box-title">Add Department</h3>
 
-     <form method="post" action="<?php echo site_url('menu/adddept'); ?>"> 
+     <form id="departmentform"> 
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -82,7 +82,7 @@ $this->load->view('components/sidemenu');
                     
           </div>
           <div class="col-xs-2">
-          <button type="submit" class="btn btn-block btn-primary ">Add</button>
+          <button type="button" class="btn btn-block btn-primary add_dept">Add</button>
           </div>
         </div>
         <!-- /.box-body -->
@@ -125,5 +125,40 @@ $this->load->view('components/sidebarcontroller');
 <script src="<?php echo base_url(); ?>public/dist/js/demo.js"></script>
 <!---Custom js--->
 <script src="<?php echo base_url(); ?>public/custom/js/script.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+  $(document).ready(function() {
+   $('.add_dept').click(function(){
+            
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo site_url(); ?>/data/adddept",
+                    data: $('#departmentform').serialize(),
+                    dataType: "json",
+                    success: function(response){
+                        if(response==true) //if success close modal and reload ajax table
+                          {
+                          toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 });
+                          $('#departmentform')[0].reset();    
+                          }
+                        else{
+                          toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                          }
+
+                        },
+                        error: function(xhr, textStatus, error) {
+                          console.log(xhr.statusText);
+                          console.log(textStatus);
+                          console.log(error);
+                        }
+                    })
+          
+          });//update action
+
+  });
+
+ 
+
+</script>
 </body>
 </html>
