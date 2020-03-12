@@ -241,6 +241,7 @@ $this->load->view('components/sidebarcontroller');
                           {
                           toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 });
                           $('#subjectform')[0].reset();    
+                          table.ajax.reload(null,false); //reload datatable ajax 
                           }
                         else{
                           toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    

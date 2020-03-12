@@ -77,10 +77,31 @@ $route['data/addusertype'] = 'DataController/addusertype';
 $route['data/assignsubject'] = 'DataController/assignsubject';
 
 $route['tdata/getsubjectdata'] = 'DataController/getsubjectData';
+$route['tdata/getcoursedata'] = 'DataController/getcourseData';
+$route['tdata/getdepartmentdata'] = 'DataController/getdepartmentData';
+$route['tdata/getusertypedata'] = 'DataController/getusertypeData';
+$route['tdata/getassignsubjectdata'] = 'DataController/getassignsubjectdata';
+
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';
 $route['mdata/subjectupdate'] = 'DataController/subjectupdate';
+
+$route['mdata/getmodelcourse'] = 'DataController/getmodelcourse';
+$route['mdata/coursedelete'] = 'DataController/coursedelete';
+$route['mdata/courseupdate'] = 'DataController/courseupdate';
+
+$route['mdata/getmodeldepartment'] = 'DataController/getmodeldepartment';
+$route['mdata/departmentdelete'] = 'DataController/departmentdelete';
+$route['mdata/departmentupdate'] = 'DataController/departmentupdate';
+
+$route['mdata/getmodelusertype'] = 'DataController/getmodelusertype';
+// $route['mdata/departmentdelete'] = 'DataController/departmentdelete';
+$route['mdata/usertypeupdate'] = 'DataController/usertypeupdate';
+
+$route['mdata/getassignsubject'] = 'DataController/getassignsubject';
+
+
 
 $route['menudata/singletable'] = 'DataController/singletable';
 $route['datacollection/datatablegetconnectivitydata'] = 'DataController/datatablegetconnectivitydata';

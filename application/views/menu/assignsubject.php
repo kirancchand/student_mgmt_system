@@ -41,6 +41,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -110,8 +111,8 @@ $this->load->view('components/sidemenu');
               <div class="row">
               <div class="col-xs-5">
               <div class="form-group">
-                <label>Select Place</label>
-                <select id='subject[]' name='subject[]'  class="form-control select2" multiple="multiple" data-placeholder="Select subject" style="width: 100%;">
+                <label>Select Subject</label>
+                <select id='subject[]' name='subject[]' class="form-control select2" multiple="multiple" data-placeholder="Select subject" style="width: 100%;">
                   <option value="">--please select--</option>
                   <?php
                   foreach ($subject as $key => $value)
@@ -142,6 +143,57 @@ $this->load->view('components/sidemenu');
 
     </section>
     <!-- /.content -->
+    <section class="content">
+
+<!-- Default box -->
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title">Assigned </h3>
+
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+        <i class="fa fa-minus"></i></button>
+      <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+        <i class="fa fa-times"></i></button>
+    </div>
+  </div>
+  <div class="box-body">
+      <div class="row">
+        <div class="col-xs-12">
+        <div class="form-group">
+         <table class="table table-bordered" id="mytable">
+           <thead>
+            <tr>
+            <th style="width: 10px">slno</th>
+            <th>Course Name</th>
+            <th>Subject Name</th>
+            <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+  
+          </tbody>
+        </table>
+      </div>
+      </div>
+      </div>
+
+
+
+
+       
+  </div>
+  <!-- /.box-body -->
+  <div class="box-footer clearfix">
+
+  </div>
+  <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+</section>
+
+
   </div>
   <!-- /.content-wrapper -->
 
@@ -175,6 +227,10 @@ $this->load->view('components/sidebarcontroller');
 <!-- bootstrap time picker -->
 <script src="<?php echo base_url(); ?>public/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+<script src="<?php echo base_url(); ?>public/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
   $(function () {
     //Initialize Select2 Elements
@@ -207,7 +263,10 @@ $('.assign_subject').click(function(){
                         if(response==true) //if success close modal and reload ajax table
                           {                     
                            toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
-                             $('#assignsubjectform')[0].reset();
+                           $('#course_id').val('').trigger("change");
+                            $('.select2').val('').trigger("change");
+
+                            //  $('#assignsubjectform')[0].reset();
                             //  $(".select2").multiselect('clearSelection');
                             
                             // $(".select2")[0].selectedIndex = 0;
@@ -232,6 +291,188 @@ $('.assign_subject').click(function(){
                     })
           
           });
+
+
+          $('#course_id').change(function(){
+
+//alert("hyy");
+//alert($('#starttime').val());
+            var course_id=$('#course_id').val();
+            // alert(course_id);
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo site_url(); ?>/mdata/getassignsubject",
+                    data: {'course_id':course_id},
+                    dataType: "json",
+                    success: function(response){
+                       
+                       console.log(response);
+
+
+
+                       $.each(response, function(index, value) {
+
+                        console.log(value.f_subject_id);
+                        
+                        // $('.select').multiple('setSelects', [1, 3]);
+                        // Will stop running after "three"
+                        // $(".select").multiselect('refresh');
+                      });
+
+     
+
+                        //console.log(response.status);
+                        // if(response==true) //if success close modal and reload ajax table
+                        //   {                     
+                        //    toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
+                        //      $('#assignsubjectform')[0].reset();
+                        //     //  $(".select2").multiselect('clearSelection');
+                            
+                        //     // $(".select2")[0].selectedIndex = 0;
+                            
+                        //    //$("#bin_number").multiselect('clearSelection');
+                        //   }
+                        // else
+                        //   { 
+                        //     toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
+
+                        //   }
+                        
+                       
+                        },
+                        error: function(xhr, textStatus, error) {
+                          console.log(xhr.statusText);
+                          console.log(textStatus);
+                          console.log(error);
+
+
+                        }
+                    })
+          
+          });
+ //datatables
+ var table = $('#mytable').DataTable({ 
+ 
+ "processing": true, //Feature control the processing indicator.
+ "serverSide": true, //Feature control DataTables' server-side processing mode.
+ "order": [], //Initial no order.
+
+ // Load data for the table's content from an Ajax source
+ "ajax": {
+     "url": "<?php echo site_url("tdata/getassignsubjectdata")?>",
+     "type": "GET"
+ },
+
+ //Set column definition initialisation properties.
+ "columnDefs": [
+ { 
+     "targets": [ -1 ], //last column
+     "orderable": false, //set not orderable
+ },
+ ],
+ "fnDrawCallback": function(oSettings){
+
+
+   $('.updateview_btn').click(function(){
+             
+//                       $(".update_btn").show();
+                   var sub_id=$(this).attr('id'); 
+         
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/getmodelsubject",
+             dataType : "json",
+             data: {"sub_id" : sub_id},
+             success: function(response){
+
+                   console.log(response);
+                   $('#subject_name').val(response[0].sub_name);
+                   $('#id').val(response[0].sub_id);
+                   $('#id').hide();
+            
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
+   
+    });//update view in modal
+
+$('.delete_btn').click(function(){
+             
+//                       $(".update_btn").show();
+                   var sub_id=$(this).attr('id'); 
+         
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/subjectdelete",
+             dataType : "json",
+             data: {"sub_id" : sub_id},
+             success: function(response){
+
+              if(response==true) //if success close modal and reload ajax table
+                       {
+                      
+                       toastr.success('deleted Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                       table.ajax.reload(null,false); //reload datatable ajax 
+                 
+                       }
+                     else{
+                     
+                       toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                     }
+            
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
+   
+    });//update view in modal
+$('.update_btn').click(function(){
+     
+         $.ajax({
+             type: "POST",
+             url: "<?php echo site_url(); ?>/mdata/subjectupdate",
+             data: $('#updatesubjectform').serialize(),
+             dataType: "json",
+             success: function(response){
+             // alert(response);  
+
+                  console.log(response);
+                 if(response==true) //if success close modal and reload ajax table
+                   {
+                  $("#myModal").modal("hide");
+                   toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                   table.ajax.reload(null,false); //reload datatable ajax 
+             
+                   }
+                 else{
+                    $("#myModal").modal("hide");
+                   toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                 }
+
+                 },
+                 error: function(xhr, textStatus, error) {
+                   console.log(xhr.statusText);
+                   console.log(textStatus);
+                   console.log(error);
+                 }
+             })
+   
+        });//update action
+
+      }//fnDrawCallback
+
+      });
+
+
+
+
 });
 </script>
 </body>
