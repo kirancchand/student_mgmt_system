@@ -95,7 +95,7 @@ $this->load->view('components/sidemenu');
             <div class="row">
             <div class="col-xs-5">
                <label>Select Course</label>
-                <select  id="course_id" name="course_id"  class="form-control select2" style="width: 100%;">
+                <select  id="course_id" name="course_id"  class="form-control" style="width: 100%;">
                 <option selected="selected" value=''>Please Select</option>
                 <?php
                   foreach ($course as $key => $value)
@@ -108,10 +108,27 @@ $this->load->view('components/sidemenu');
                 </select>
             </div>
             </div>
+            <div class="row">
+            <div class="col-xs-5">
+               <label>Select Semester</label>
+                <select  id="sem_id" name="sem_id"  class="form-control" style="width: 100%;">
+                <option selected="selected" value=''>Please Select</option>
+                <?php
+                  foreach ($semester as $key => $value)
+                  {
+                ?>
+                  <option value='<?php echo $value['sem_id']; ?>'><?php echo $value['semester_name'] ;?></option>
+                <?php
+                  }
+                ?>
+                </select>
+            </div>
+            </div>
               <div class="row">
               <div class="col-xs-5">
               <div class="form-group">
                 <label>Select Subject</label>
+                <div id="subjectdiv">
                 <select id='subject[]' name='subject[]' class="form-control select2" multiple="multiple" data-placeholder="Select subject" style="width: 100%;">
                   <option value="">--please select--</option>
                   <?php
@@ -123,10 +140,13 @@ $this->load->view('components/sidemenu');
                     }
                   ?>
                 </select>
+                </div>
               </div>
               </div>
               </div>
-                         
+
+
+
         </div>
       </form>
         <!-- /.box-body -->
@@ -264,6 +284,7 @@ $('.assign_subject').click(function(){
                           {                     
                            toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
                            $('#course_id').val('').trigger("change");
+                           $('#sem_id').val('').trigger("change");
                             $('.select2').val('').trigger("change");
 
                             //  $('#assignsubjectform')[0].reset();
@@ -293,31 +314,48 @@ $('.assign_subject').click(function(){
           });
 
 
-          $('#course_id').change(function(){
+
+
+
+
+          $('#sem_id').change(function(){
 
 //alert("hyy");
 //alert($('#starttime').val());
             var course_id=$('#course_id').val();
+            var sem_id=$('#sem_id').val();
             // alert(course_id);
                 $.ajax({
                     type: "POST",
                     url: "<?php echo site_url(); ?>/mdata/getassignsubject",
-                    data: {'course_id':course_id},
+                    data: {'course_id':course_id,'sem_id':sem_id},
                     dataType: "json",
                     success: function(response){
                        
                        console.log(response);
 
-
-
+      
+                       var Values = new Array();
+                      //  $(".select2").remove();
+                      //  $("#subjectdiv").append( 
+                      //   '<select id="subject[]" name="subject[]" multiple="multiple" class="form-control select2" data-placeholder="Select subject" style="width: 100%;">'+
+                      //   '<option value="" id="option">--please select--</option>'
+                      //  );
                        $.each(response, function(index, value) {
-
                         console.log(value.f_subject_id);
-                        
-                        // $('.select').multiple('setSelects', [1, 3]);
+                        Values.push(value.f_subject_id);
+                        // 
                         // Will stop running after "three"
                         // $(".select").multiselect('refresh');
-                      });
+                       
+                        });
+                        $('.select2').val(Values);
+                        
+          
+                       
+
+            
+              
 
      
 

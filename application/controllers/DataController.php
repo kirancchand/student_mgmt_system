@@ -266,7 +266,51 @@ class dataController extends CI_Controller {
   echo json_encode($output);
 
   }
+  public function getsemesterData()
+  {
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+   
+    $table = 'semester_tbl';
+    $column_order = array('sem_id','semester_name'); //set column field database for datatable orderable
+    $column_search = array('sem_id','semester_name'); //set column field database for datatable searchable just firstname , lastname , address are searchable
+    $order = array('sem_id' => 'desc'); // default order 
 
+
+   $subject_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($subject_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->semester_name;
+              $row[] = '
+              <button type="button" id="'.$r->sem_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>';
+              $data[] = $row;
+              // <button type="button" id="'.$r->sem_id.'"  class="btn btn-danger delete_btn">delete</button
+             
+    }
+
+
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_all($table),
+                  "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
 
   // public function getassignsubjectdata()
   // {
@@ -449,13 +493,27 @@ class dataController extends CI_Controller {
   {
         $course_id = $this->input->post('course_id');
         $subject_id = $this->input->post('subject');
+        $sem_id = $this->input->post('sem_id');
         $data=array(
           'course_id' => $course_id,
-          'subject_id' => $subject_id
+          'subject_id' => $subject_id,
+          'sem_id' => $sem_id
         ); 
         $result=$this->DataModel->assignsubject($data);
         echo json_encode($result);
   }
+
+
+	public function addsem()
+	{
+
+        $semname = $this->input->post('semname');
+        $data=array(
+          'semester_name' => $semname,
+        );
+        $result = $this->DataModel->addsem($data);  
+        echo json_encode($result);
+	}
 
   public function getmodelsubject()
   {
@@ -556,10 +614,28 @@ class dataController extends CI_Controller {
   public function getassignsubject()
   {
         $course_id = $this->input->post('course_id');
-        $result=$this->DataModel->getassignSubject($course_id);
+        $sem_id = $this->input->post('sem_id');
+        $result=$this->DataModel->getassignSubject($course_id,$sem_id);
         echo json_encode($result);
   }
 
+
+  public function getmodelsemester()
+  {
+        $sem_id = $this->input->post('sem_id');
+        $result=$this->DataModel->getmodelSemester($sem_id);
+        echo json_encode($result);
+  }
+  public function semesterupdate()
+  {
+        $sem_id = $this->input->post('id');
+        $semester_name = $this->input->post('semester_name');
+        $data=array(
+          'semester_name' => $semester_name
+        );
+        $result=$this->DataModel->semesterUpdate($data,$sem_id);
+        echo json_encode($result);
+  }
 
 
 }

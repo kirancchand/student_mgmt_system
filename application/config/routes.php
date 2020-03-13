@@ -69,19 +69,23 @@ $route['menu/addcourse']='MenuController/addcourse';
 $route['menu/adddept'] = 'MenuController/adddept';
 $route['menu/addusertype'] = 'MenuController/addusertype';
 $route['menu/assignsubject'] = 'MenuController/assignsubject';
+$route['menu/addsem']='MenuController/addsem';
+$route['menu/addclasstimetbl']='MenuController/addclasstimetbl';
+
 
 $route['data/addsub'] = 'DataController/addsub';
 $route['data/addcourse'] = 'DataController/addcourse';
 $route['data/adddept'] = 'DataController/adddept';
 $route['data/addusertype'] = 'DataController/addusertype';
 $route['data/assignsubject'] = 'DataController/assignsubject';
+$route['data/addsem'] = 'DataController/addsem';
 
 $route['tdata/getsubjectdata'] = 'DataController/getsubjectData';
 $route['tdata/getcoursedata'] = 'DataController/getcourseData';
 $route['tdata/getdepartmentdata'] = 'DataController/getdepartmentData';
 $route['tdata/getusertypedata'] = 'DataController/getusertypeData';
 $route['tdata/getassignsubjectdata'] = 'DataController/getassignsubjectdata';
-
+$route['tdata/getsemesterdata'] = 'DataController/getsemesterData';
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';
@@ -100,6 +104,10 @@ $route['mdata/getmodelusertype'] = 'DataController/getmodelusertype';
 $route['mdata/usertypeupdate'] = 'DataController/usertypeupdate';
 
 $route['mdata/getassignsubject'] = 'DataController/getassignsubject';
+
+$route['mdata/getmodelsemester'] = 'DataController/getmodelsemester';
+$route['mdata/semesterupdate'] = 'DataController/semesterupdate';
+
 
 
 

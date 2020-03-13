@@ -55,21 +55,32 @@
          $i=0;
          $k=0;
          $f_course_id=$data['course_id'];
-         foreach($data['subject_id'] as $value)
-          {    
-            
-            $data=array(
-               'f_course_id' => $f_course_id,
-               'f_subject_id' => $value
-             ); 
+         $f_sem_id=$data['sem_id'];
 
-            if (!$this->db->insert("course_subject_tbl", $data)) 
-            { 
-               $k++;
-            } 
-            $i++;
+         $this->db->where('f_course_id',$f_course_id);
+         $this->db->where('f_sem_id',$f_sem_id);
+         $result=$this->db->delete('course_subject_tbl');
+         if($result)
+         {
+            foreach($data['subject_id'] as $value)
+            {    
+              
+              $data=array(
+                 'f_course_id' => $f_course_id,
+                 'f_subject_id' => $value,
+                 'f_sem_id' => $f_sem_id
+               ); 
+  
+              if (!$this->db->insert("course_subject_tbl", $data)) 
+              { 
+                 $k++;
+              } 
+              $i++;
+  
+            }
+         }
 
-          }
+         
           if($k>0)
           {
             return false;
@@ -80,6 +91,18 @@
           }
           
       } 
+
+
+      public function addsem($data) { 
+         if ($this->db->insert("semester_tbl", $data)) { 
+            return true; 
+        }
+        else
+        {
+            return false; 
+        }
+      }
+
 
       public function get_Course($crse_id) 
       { 
@@ -99,18 +122,35 @@
        }
 
 
-       public function getassignSubject($course_id) 
+       public function getassignSubject($course_id,$sem_id) 
        { 
           $response = array();
           $this->db->select('*');
           $this->db->from('course_subject_tbl');
           $this->db->where('f_course_id', $course_id);
+          $this->db->where('f_sem_id', $sem_id);
           $query = $this->db->get();
           $response = $query->result_array();
           return $response;
        } 
 
 
+
+       public function getDay() 
+       { 
+         $response = array();
+         $response[0]['day_id'] = 1;
+         $response[0]['day_name'] = "monday";
+         $response[1]['day_id'] = 2;
+         $response[1]['day_name'] = "tuesday";
+
+         //  $data=array(
+         //    'day_id' => 1,
+         //    'day_name' => "monday"
+         //  );
+          return $response;
+       } 
+ 
 
 
       public function getCourse() 
@@ -224,6 +264,34 @@
             return $result; 
          }
 
+
+
+         public function getSemester() 
+         { 
+            $response = array();
+            $this->db->select('*');
+            $this->db->from('semester_tbl');
+            $query = $this->db->get();
+            $response = $query->result_array();
+            return $response;
+         } 
+       public function getmodelSemester($sem_id) 
+         { 
+            $response = array();
+            $this->db->select('*');
+            $this->db->from('semester_tbl');
+            $this->db->where('sem_id', $sem_id);
+            $query = $this->db->get();
+            $response = $query->result_array();
+            return $response;
+         } 
+
+      public function semesterUpdate($data,$id) 
+         { 
+           $this->db->where('sem_id',$id);
+            $result=$this->db->update('semester_tbl',$data);
+            return $result; 
+         }
       public function getDatatable($table,$column_order,$column_search,$order)
       {
           $this->_getDatatable_query($table,$column_order,$column_search,$order);

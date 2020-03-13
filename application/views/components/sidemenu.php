@@ -33,19 +33,26 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li>
-              <a href="<?php echo site_url('menu/addsub'); ?>"><i class="fa fa-circle-o"></i>Add sub</a>
-            </li>
-            <li>
-              <a href="<?php echo site_url('menu/addcourse'); ?>"><i class="fa fa-circle-o"></i>Add course</a>
-            </li>
-            <li>
+           <li>
               <a href="<?php echo site_url('menu/adddept'); ?>"><i class="fa fa-circle-o"></i>Add dept </a></li>
            <li>
+           <li>
+              <a href="<?php echo site_url('menu/addcourse'); ?>"><i class="fa fa-circle-o"></i>Add course</a>
+           </li>
+           <li>
+              <a href="<?php echo site_url('menu/addsub'); ?>"><i class="fa fa-circle-o"></i>Add sub</a>
+           </li>
+           <li>
+              <a href="<?php echo site_url('menu/addsem'); ?>"><i class="fa fa-circle-o"></i>Add semester</a>
+           </li>
+            <li>
               <a href="<?php echo site_url('menu/addusertype'); ?>"><i class="fa fa-circle-o"></i> Add user type</a>
             </li>
             <li>
               <a href="<?php echo site_url('menu/assignsubject'); ?>"><i class="fa fa-circle-o"></i> Assign Subject </a>
+            </li>
+            <li>
+              <a href="<?php echo site_url('menu/addclasstimetbl'); ?>"><i class="fa fa-circle-o"></i> Add Class Period </a>
             </li>
             
           </ul>

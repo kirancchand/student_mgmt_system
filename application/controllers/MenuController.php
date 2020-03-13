@@ -62,7 +62,24 @@ class MenuController extends CI_Controller {
 		$result = array();
 		$result['course']=$this->DataModel->getCourse();
 		$result['subject']=$this->DataModel->getSubject();
+		$result['semester']=$this->DataModel->getSemester();
         $this->load->view('menu/assignsubject',$result); 
+	}
+
+	public function addsem()
+	{
+		
+        $this->load->view('menu/addsem'); 
+	}
+
+	public function addclasstimetbl()
+	{
+		$result = array();
+		$result['course']=$this->DataModel->getCourse();
+		$result['semester']=$this->DataModel->getSemester();
+		$result['subject']=$this->DataModel->getSubject();
+		$result['day']=$this->DataModel->getDay();
+        $this->load->view('menu/addclasstimetbl',$result); 
 	}
 
 
