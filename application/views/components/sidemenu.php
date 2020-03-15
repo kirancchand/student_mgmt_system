@@ -52,9 +52,14 @@
               <a href="<?php echo site_url('menu/assignsubject'); ?>"><i class="fa fa-circle-o"></i> Assign Subject </a>
             </li>
             <li>
-              <a href="<?php echo site_url('menu/addclasstimetbl'); ?>"><i class="fa fa-circle-o"></i> Add Class Period </a>
+              <a href="<?php echo site_url('menu/addclasstimetbl'); ?>"><i class="fa fa-circle-o"></i> Add Class Timetable </a>
             </li>
-            
+            <li>
+              <a href="<?php echo site_url('menu/addday'); ?>"><i class="fa fa-circle-o"></i> Add Day </a>
+            </li>
+            <li>
+              <a href="<?php echo site_url('menu/addperiod'); ?>"><i class="fa fa-circle-o"></i> Add Period </a>
+            </li>
           </ul>
         </li>
       </ul>

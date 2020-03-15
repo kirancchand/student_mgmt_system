@@ -71,7 +71,8 @@ $route['menu/addusertype'] = 'MenuController/addusertype';
 $route['menu/assignsubject'] = 'MenuController/assignsubject';
 $route['menu/addsem']='MenuController/addsem';
 $route['menu/addclasstimetbl']='MenuController/addclasstimetbl';
-
+$route['menu/addday']='MenuController/addday';
+$route['menu/addperiod']='MenuController/addperiod';
 
 $route['data/addsub'] = 'DataController/addsub';
 $route['data/addcourse'] = 'DataController/addcourse';
@@ -79,6 +80,11 @@ $route['data/adddept'] = 'DataController/adddept';
 $route['data/addusertype'] = 'DataController/addusertype';
 $route['data/assignsubject'] = 'DataController/assignsubject';
 $route['data/addsem'] = 'DataController/addsem';
+$route['data/assign_timetblsubject'] = 'DataController/assign_timetblsubject';
+$route['data/addday']='DataController/addday';
+$route['data/addperiod']='DataController/addperiod';
+
+
 
 $route['tdata/getsubjectdata'] = 'DataController/getsubjectData';
 $route['tdata/getcoursedata'] = 'DataController/getcourseData';
@@ -86,6 +92,10 @@ $route['tdata/getdepartmentdata'] = 'DataController/getdepartmentData';
 $route['tdata/getusertypedata'] = 'DataController/getusertypeData';
 $route['tdata/getassignsubjectdata'] = 'DataController/getassignsubjectdata';
 $route['tdata/getsemesterdata'] = 'DataController/getsemesterData';
+$route['tdata/getdaydata'] = 'DataController/getdayData';
+$route['tdata/getperioddata'] = 'DataController/getperiodData';
+$route['tdata/gettimetbldata'] = 'DataController/gettimetblData';
+
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';
@@ -108,6 +118,11 @@ $route['mdata/getassignsubject'] = 'DataController/getassignsubject';
 $route['mdata/getmodelsemester'] = 'DataController/getmodelsemester';
 $route['mdata/semesterupdate'] = 'DataController/semesterupdate';
 
+$route['mdata/getmodelday'] = 'DataController/getmodelday';
+$route['mdata/dayupdate'] = 'DataController/dayupdate';
+
+$route['mdata/getmodelperiod'] = 'DataController/getmodelperiod';
+$route['mdata/periodupdate'] = 'DataController/periodupdate';
 
 
 

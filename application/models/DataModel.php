@@ -37,7 +37,7 @@
          }
       } 
 
-
+   
 
       public function addusertype($data) { 
          if ($this->db->insert("usertype_tbl", $data)) { 
@@ -102,8 +102,67 @@
             return false; 
         }
       }
+      public function addday($data) { 
+         if ($this->db->insert("day_tbl", $data)) { 
+            return true; 
+        }
+        else
+        {
+            return false; 
+        }
+      }
+      public function addperiod($data) { 
+         if ($this->db->insert("period_tbl", $data)) { 
+            return true; 
+        }
+        else
+        {
+            return false; 
+        }
+      }
+      public function assign_timetblsubject($data) { 
 
 
+         $this->db->where('f_course_id',$data['f_course_id']);
+         $this->db->where('f_sem_id',$data['f_sem_id']);
+         $this->db->where('f_day_id',$data['f_day_id']);
+         $this->db->where('f_period_id',$data['f_period_id']);
+         $result=$this->db->delete('classtimetable_tbl');
+         if($result)
+         {
+            if ($this->db->insert("classtimetable_tbl", $data)) { 
+               return true; 
+            }  
+            else
+            {
+                return false; 
+            }
+
+         }
+
+      } 
+
+      public function getSubject_data($f_course_id,$f_sem_id,$f_day_id,$f_period_id) { 
+
+
+   
+         $result=$this->db->select('crse_name');
+
+         $response = array();
+          $this->db->select('f_subject_id');
+          $this->db->from('classtimetable_tbl');
+          $this->db->where('f_course_id',$f_course_id);
+          $this->db->where('f_sem_id',$f_sem_id);
+          $this->db->where('f_day_id',$f_day_id);
+          $this->db->where('f_period_id',$f_period_id);
+          $query = $this->db->get();
+          $response = $query->result_array();
+          return $response;
+
+      } 
+
+
+      
       public function get_Course($crse_id) 
       { 
          $this->get_Course_query($crse_id);
@@ -139,18 +198,34 @@
        public function getDay() 
        { 
          $response = array();
-         $response[0]['day_id'] = 1;
-         $response[0]['day_name'] = "monday";
-         $response[1]['day_id'] = 2;
-         $response[1]['day_name'] = "tuesday";
-
-         //  $data=array(
-         //    'day_id' => 1,
-         //    'day_name' => "monday"
-         //  );
-          return $response;
+         $this->db->select('*');
+         $this->db->from('day_tbl');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
        } 
- 
+
+       public function getPeriod() 
+       { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('period_tbl');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+       } 
+
+       public function gettimetblData($course_id,$sem_id) 
+       { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('classtimetable_tbl');
+         $this->db->where('f_course_id', $course_id);
+         $this->db->where('f_sem_id', $sem_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+       } 
 
 
       public function getCourse() 
@@ -292,6 +367,41 @@
             $result=$this->db->update('semester_tbl',$data);
             return $result; 
          }
+
+
+      public function getmodelDay($day_id) 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('day_tbl');
+         $this->db->where('day_id', $day_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+      public function dayUpdate($data,$id) 
+      { 
+        $this->db->where('day_id',$id);
+         $result=$this->db->update('day_tbl',$data);
+         return $result; 
+      }
+
+      public function getmodelPeriod($period_id) 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('period_tbl');
+         $this->db->where('period_id', $period_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+      public function periodUpdate($data,$id) 
+      { 
+        $this->db->where('period_id',$id);
+         $result=$this->db->update('period_tbl',$data);
+         return $result; 
+      }
       public function getDatatable($table,$column_order,$column_search,$order)
       {
           $this->_getDatatable_query($table,$column_order,$column_search,$order);

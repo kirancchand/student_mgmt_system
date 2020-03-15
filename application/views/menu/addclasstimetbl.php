@@ -75,7 +75,7 @@ $this->load->view('components/sidemenu');
         <i class="fa fa-times"></i></button>
     </div>
   </div>
-  <form id='addclasstimetblform' name='addclasstimetblform'> 
+  <form id='classtimetblform' name='classtimetblform'> 
   <div class="box-body">
       <div class="row">
       <div class="col-xs-5">
@@ -128,7 +128,7 @@ $this->load->view('components/sidemenu');
       </div>
       </div>
 
-      <div class="row">
+      <!-- <div class="row">
       <div class="col-xs-5">
          <label>Enter Number of Period</label>
          <input type="text" name="no_of_period" id="no_of_period" class="form-control"  required="required" autofocus="autofocus">
@@ -139,10 +139,32 @@ $this->load->view('components/sidemenu');
         <div class="col-xs-5">
         <div class="form-group">
           <label>Select Period</label>
-        
-          <select id='period' name='period' class="form-control select2" data-placeholder="Select period" style="width: 100%;">
+            <div id="period_div">
+          <select id='period_id' name='period_id' class="form-control select2" data-placeholder="Select period" style="width: 100%;">
             <option value="">--please select--</option>
           </select>
+          </div>
+        </div>
+        </div>
+        </div> -->
+
+        <div class="row">
+        <div class="col-xs-5">
+        <div class="form-group">
+          <label>Select Period</label>
+            <div id="period_div">
+          <select id='period_id' name='period_id' class="form-control select2" data-placeholder="Select period" style="width: 100%;">
+            <option value="">--please select--</option>
+            <?php
+            foreach ($period as $key => $value)
+            {
+            ?>
+              <option value='<?php echo $value['period_id']; ?>'><?php echo $value['period_name'] ;?></option>
+            <?php
+              }
+            ?>
+          </select>
+          </div>
         </div>
         </div>
         </div>
@@ -154,7 +176,7 @@ $this->load->view('components/sidemenu');
         <div class="form-group">
           <label>Select Subject</label>
           <div id="subjectdiv">
-          <select id='subject' name='subject' class="form-control select2" data-placeholder="Select subject" style="width: 100%;">
+          <select id='subject_id' name='subject_id' class="form-control select2" data-placeholder="Select subject" style="width: 100%;">
             <option value="">--please select--</option>
             <?php
             foreach ($subject as $key => $value)
@@ -211,10 +233,23 @@ $this->load->view('components/sidemenu');
          <table class="table table-bordered" id="mytable">
            <thead>
             <tr>
-            <th style="width: 10px">slno</th>
-            <th>Subject Name</th>
-            <th>Actions</th>
+            <th style="width: 10px">Day\Period</th>
+            <?php
+            $i=0;
+            foreach ($period as $key => $value)
+            {
+            ?>
+            <th><?php echo $value['period_name']; ?></th>
+            <?php
+            $i++;
+            }
+            ?>
             </tr>
+            <tr id="classtimetbl">
+             
+             </tr>
+           
+           
           </thead>
           <tbody>
   
@@ -322,66 +357,43 @@ $this->load->view('components/sidebarcontroller');
 <script>
   $(document).ready(function() {
 
-    $('#no_of_period').keyup(function(){
+    // $('#no_of_period').keyup(function(){
             
       
-      var no_of_period = $("#no_of_period").val();
-      var k=0;
-      for (i = 0; i < no_of_period; i++) 
-      {
+    //   var no_of_period = $("#no_of_period").val();
+    //   var k=0;
 
-        k=i+1;        
-        $('#period').append($("<option></option>").attr("value",i).text("period"+" "+k)); 
+    //   $('#period_id').remove(); 
+    //   $('#period_div').append(
+    //   '<select id="period_id"name="period_id" class="form-control select2" data-placeholder="Select period" style="width: 100%;">'+
+    //   '<option value="">--please select--</option>'+
+    //   '</select>')
+    //   for (i = 0; i < no_of_period; i++) 
+    //   {
 
-        // alert(no_of_period);
-      }
-      // $.each(no_of_period, function(index, value) {
+    //     k=i+1;        
+    //     $('#period_id').append($("<option></option>").attr("value",i).text("period"+" "+k)); 
 
-      //   alert(no_of_period);
-
-      // });
-            
-            // $.ajax({
-            //     type: "POST",
-            //     url: "<?php echo site_url(); ?>/data/addsub",
-            //     data: $('#subjectform').serialize(),
-            //     dataType: "json",
-            //     success: function(response){
-              
-            //         if(response==true) //if success close modal and reload ajax table
-            //           {
-            //           toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 });
-            //           $('#subjectform')[0].reset();    
-            //           table.ajax.reload(null,false); //reload datatable ajax 
-            //           }
-            //         else{
-            //           toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-            //         }
-
-            //         },
-            //         error: function(xhr, textStatus, error) {
-            //           console.log(xhr.statusText);
-            //           console.log(textStatus);
-            //           console.log(error);
-            //         }
-            //     })
+    //     // alert(no_of_period);
+    //   }
+   
       
-      });//update action
+    //   });//update action
 
-   $('.add_sub').click(function(){
+   $('.assign_subject').click(function(){
             
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo site_url(); ?>/data/addsub",
-                    data: $('#subjectform').serialize(),
+                    url: "<?php echo site_url(); ?>/data/assign_timetblsubject",
+                    data: $('#classtimetblform').serialize(),
                     dataType: "json",
                     success: function(response){
-                  
+                  // alert(response);
                         if(response==true) //if success close modal and reload ajax table
                           {
-                          toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 });
-                          $('#subjectform')[0].reset();    
-                          table.ajax.reload(null,false); //reload datatable ajax 
+                          toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 }); 
+
+                          // table.ajax.reload(null,false); //reload datatable ajax 
                           }
                         else{
                           toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
@@ -397,128 +409,50 @@ $this->load->view('components/sidebarcontroller');
           
           });//update action
 
-    //datatables
-  var table = $('#mytable').DataTable({ 
- 
- "processing": true, //Feature control the processing indicator.
- "serverSide": true, //Feature control DataTables' server-side processing mode.
- "order": [], //Initial no order.
-
- // Load data for the table's content from an Ajax source
- "ajax": {
-     "url": "<?php echo site_url("tdata/getsubjectdata")?>",
-     "type": "GET"
- },
-
- //Set column definition initialisation properties.
- "columnDefs": [
- { 
-     "targets": [ -1 ], //last column
-     "orderable": false, //set not orderable
- },
- ],
- "fnDrawCallback": function(oSettings){
-
-
-   $('.updateview_btn').click(function(){
-             
-//                       $(".update_btn").show();
-                   var sub_id=$(this).attr('id'); 
-         
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/getmodelsubject",
-             dataType : "json",
-             data: {"sub_id" : sub_id},
-             success: function(response){
-
-                   console.log(response);
-                   $('#subject_name').val(response[0].sub_name);
-                   $('#id').val(response[0].sub_id);
-                   $('#id').hide();
-            
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-    });//update view in modal
-
-$('.delete_btn').click(function(){
-             
-//                       $(".update_btn").show();
-                   var sub_id=$(this).attr('id'); 
-         
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/subjectdelete",
-             dataType : "json",
-             data: {"sub_id" : sub_id},
-             success: function(response){
-
-              if(response==true) //if success close modal and reload ajax table
-                       {
-                      
-                       toastr.success('deleted Successfully..!!', 'Success Alert', { timeOut: 3000 });    
-                       table.ajax.reload(null,false); //reload datatable ajax 
-                 
-                       }
-                     else{
-                     
-                       toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-                     }
-            
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-    });//update view in modal
-$('.update_btn').click(function(){
-     
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/subjectupdate",
-             data: $('#updatesubjectform').serialize(),
-             dataType: "json",
-             success: function(response){
-             // alert(response);  
-
+          $('#sem_id').change(function(){
+            var course_id = $('#course_id').val(); 
+            var sem_id = $('#sem_id').val(); 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo site_url(); ?>/tdata/gettimetbldata",
+                data: {"course_id":course_id,"sem_id":sem_id},
+                dataType: "json",
+                success: function(response){
+                  // <tr id="classtimetbl">
                   console.log(response);
-                 if(response==true) //if success close modal and reload ajax table
-                   {
-                  $("#myModal").modal("hide");
-                   toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
-                   table.ajax.reload(null,false); //reload datatable ajax 
-             
-                   }
-                 else{
-                    $("#myModal").modal("hide");
-                   toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-                 }
 
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-        });//update action
-
-      }//fnDrawCallback
-
-      });
+                  // $('#classtimetbl').remove();
+                  // $('#mytable').append("<tr id='classtimetbl'></tr>")
+                  // $.each(response['day'], function(index, value) {
+                    
+                  //   $('#classtimetbl').append("<tr><td>"+value['day_name']+"</td>")
+                  //   $(this).closest('tr').append("<td>"+index+"</td></tr>")
+     
+                       
+                  // });
 
 
+                  
+                
+                    // if(response==true) //if success close modal and reload ajax table
+                    //   {
+                    //   toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 }); 
 
+                    //   table.ajax.reload(null,false); //reload datatable ajax 
+                    //   }
+                    // else{
+                    //   toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                    // }
+
+                    },
+                    error: function(xhr, textStatus, error) {
+                      console.log(xhr.statusText);
+                      console.log(textStatus);
+                      console.log(error);
+                    }
+                })
+      
+      });//update action
 
   });
 

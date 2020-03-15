@@ -311,6 +311,137 @@ class dataController extends CI_Controller {
   echo json_encode($output);
 
   }
+  public function getdayData()
+  {
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+    $table = 'day_tbl';
+    $column_order = array('day_id','day_name');
+    $column_search = array('day_id','day_name'); 
+    $order = array('day_id' => 'asc'); 
+
+   $day_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($day_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->day_name;
+              $row[] = '
+              <button type="button" id="'.$r->day_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+              ';
+              $data[] = $row;
+              // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
+             
+    }
+
+ 
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_all($table),
+                  "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
+
+  public function getperiodData()
+  {
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+    $table = 'period_tbl';
+    $column_order = array('period_id','period_name','period_time');
+    $column_search = array('period_id','period_name','period_time'); 
+    $order = array('period_id' => 'asc'); 
+
+   $period_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($period_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->period_name;
+              $row[] = $r->period_time;
+              $row[] = '
+              <button type="button" id="'.$r->period_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+              ';
+              $data[] = $row;
+              // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
+             
+    }
+
+ 
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_all($table),
+                  "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
+  public function gettimetblData()
+  {
+    $course_id = $this->input->post('course_id');
+    $sem_id = $this->input->post('sem_id');
+    $result['timetbl'] = $this->DataModel->gettimetblData($course_id,$sem_id);  
+    $result['subject']=$this->DataModel->getSubject();
+		$result['day']=$this->DataModel->getDay();
+    $result['period']=$this->DataModel->getPeriod();
+    // $k=number of period
+    $i=0;
+   
+    foreach($result['day'] as $value)
+        { 
+          // $result[$i][0]=$value['day_name'];
+          $day_id=$value['day_id'];
+          $j=0;
+            foreach($result['period'] as $value)
+              {
+                $has_subject=$this->DataModel->getSubject_data($course_id,$sem_id,$day_id,$value['period_id']);
+                // $result[$i][$j]=$value['period_name'];
+               
+          //    $j=$i+1;
+          //   if($result['timetbl'][$k]['f_period_id']==$result['period'][$k])
+          //   {
+          //     $result[$k][$j]=$result['subject'][$k];
+          //   }
+          //   else
+          //   {
+          //     $result[$k][$j]="no subject";
+          //   }
+            $j++;
+             }
+           
+
+          
+          $i++;
+        }
+   
+    
+    echo json_encode($has_subject);
+  }
 
   // public function getassignsubjectdata()
   // {
@@ -503,6 +634,24 @@ class dataController extends CI_Controller {
         echo json_encode($result);
   }
 
+  public function assign_timetblsubject()
+  {
+        $course_id = $this->input->post('course_id');
+        $subject_id = $this->input->post('subject_id');
+        $sem_id = $this->input->post('sem_id');
+        $day_id = $this->input->post('day_id');
+        $period_id = $this->input->post('period_id');
+        $data=array(
+          'f_course_id' => $course_id,
+          'f_sem_id' => $sem_id,
+          'f_day_id'=>$day_id,
+          'f_period_id'=>$period_id,
+          'f_subject_id' => $subject_id
+        ); 
+        $result=$this->DataModel->assign_timetblsubject($data);
+        echo json_encode($result);
+  }
+
 
 	public function addsem()
 	{
@@ -515,6 +664,28 @@ class dataController extends CI_Controller {
         echo json_encode($result);
 	}
 
+  public function addday()
+	{
+
+        $day_name = $this->input->post('day_name');
+        $data=array(
+          'day_name' => $day_name,
+        );
+        $result = $this->DataModel->addday($data);  
+        echo json_encode($result);
+  }
+  public function addperiod()
+	{
+
+        $period_name = $this->input->post('period_name');
+        $period_time = $this->input->post('period_time');
+        $data=array(
+          'period_name' => $period_name,
+          'period_time' => $period_time
+        );
+        $result = $this->DataModel->addperiod($data);  
+        echo json_encode($result);
+  }
   public function getmodelsubject()
   {
         $sub_id = $this->input->post('sub_id');
@@ -634,6 +805,43 @@ class dataController extends CI_Controller {
           'semester_name' => $semester_name
         );
         $result=$this->DataModel->semesterUpdate($data,$sem_id);
+        echo json_encode($result);
+  }
+
+  public function getmodelday()
+  {
+        $day_id = $this->input->post('day_id');
+        $result=$this->DataModel->getmodelDay($day_id);
+        echo json_encode($result);
+  }
+
+  public function getmodelperiod()
+  {
+        $period_id = $this->input->post('period_id');
+        $result=$this->DataModel->getmodelPeriod($period_id);
+        echo json_encode($result);
+  }
+
+  public function dayupdate()
+  {
+        $day_id = $this->input->post('id');
+        $day_name = $this->input->post('dayname');
+        $data=array(
+          'day_name' => $day_name
+        );
+        $result=$this->DataModel->dayUpdate($data,$day_id);
+        echo json_encode($result);
+  }
+  public function periodupdate()
+  {
+        $period_id = $this->input->post('id');
+        $period_name = $this->input->post('periodname');
+        $period_time = $this->input->post('periodtime');
+        $data=array(
+          'period_name' => $period_name,
+          'period_time' => $period_time
+        );
+        $result=$this->DataModel->periodUpdate($data,$period_id);
         echo json_encode($result);
   }
 
