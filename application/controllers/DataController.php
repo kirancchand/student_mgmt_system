@@ -401,25 +401,89 @@ class dataController extends CI_Controller {
   echo json_encode($output);
 
   }
+
+  public function getstudentData()
+  {
+    $course_id = $this->input->get('course_id');
+    $sem_id = $this->input->get('sem_id');
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+    $table = 'regstn_tbl';
+    $column_order = array('user_id','first_name','last_name','admssn_no');
+    $column_search = array('user_id','first_name','last_name','admssn_no');
+    $order = array('user_id' => 'asc'); 
+
+   $student_result=$this->DataModel->getDatatableStudent($table,$column_order,$column_search,$order,$course_id,$sem_id);
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($student_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->admssn_no;
+              $row[] = $r->first_name;
+              $row[] = $r->last_name;
+              $row[] = '
+              <button type="button" id="'.$r->user_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+              ';
+              $data[] = $row;
+              // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
+             
+    }
+
+ 
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_allstudent($table),
+                  "recordsFiltered" => $this->DataModel->count_filteredstudent($table,$column_order,$column_search,$order,$course_id,$sem_id),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
   public function gettimetblData()
   {
     $course_id = $this->input->post('course_id');
     $sem_id = $this->input->post('sem_id');
+
+
+    $course_id = 1236;
+    $sem_id = 1;
+
     $result['timetbl'] = $this->DataModel->gettimetblData($course_id,$sem_id);  
     $result['subject']=$this->DataModel->getSubject();
 		$result['day']=$this->DataModel->getDay();
     $result['period']=$this->DataModel->getPeriod();
     // $k=number of period
     $i=0;
-   
+    // $has_subject=$this->DataModel->getSubject_data(1236,1,1,1);
     foreach($result['day'] as $value)
         { 
           // $result[$i][0]=$value['day_name'];
           $day_id=$value['day_id'];
+          $has_subject['day'][$i]=$value['day_name'];
           $j=0;
             foreach($result['period'] as $value)
               {
-                $has_subject=$this->DataModel->getSubject_data($course_id,$sem_id,$day_id,$value['period_id']);
+                $has_subject['subject'][$i][$j]=$this->DataModel->getSubject_data($course_id,$sem_id,$day_id,$value['period_id']);
+                if($has_subject['subject'][$i][$j]==null)
+                {
+                  $has_subject['subject'][$i][$j]="no subject";
+                }
+                else{
+
+                  $subject=$this->DataModel->getmodelSubject($has_subject['subject'][$i][$j][0]['f_subject_id']);
+                  $has_subject['subject'][$i][$j]=$subject[0]['sub_name'];
+                }
                 // $result[$i][$j]=$value['period_name'];
                
           //    $j=$i+1;
@@ -438,7 +502,7 @@ class dataController extends CI_Controller {
           
           $i++;
         }
-   
+        // $has_subject['period_count']=$j;
     
     echo json_encode($has_subject);
   }

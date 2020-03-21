@@ -73,6 +73,8 @@ $route['menu/addsem']='MenuController/addsem';
 $route['menu/addclasstimetbl']='MenuController/addclasstimetbl';
 $route['menu/addday']='MenuController/addday';
 $route['menu/addperiod']='MenuController/addperiod';
+$route['menu/viewstudent']='MenuController/viewstudent';
+
 
 $route['data/addsub'] = 'DataController/addsub';
 $route['data/addcourse'] = 'DataController/addcourse';
@@ -95,7 +97,7 @@ $route['tdata/getsemesterdata'] = 'DataController/getsemesterData';
 $route['tdata/getdaydata'] = 'DataController/getdayData';
 $route['tdata/getperioddata'] = 'DataController/getperiodData';
 $route['tdata/gettimetbldata'] = 'DataController/gettimetblData';
-
+$route['tdata/getstudentdata'] = 'DataController/getstudentData';
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';

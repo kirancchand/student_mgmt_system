@@ -244,6 +244,7 @@ $this->load->view('components/sidemenu');
             $i++;
             }
             ?>
+            <input type="hidden" value="<?php echo $i; ?>" id="period_count"/>
             </tr>
             <tr id="classtimetbl">
              
@@ -412,6 +413,7 @@ $this->load->view('components/sidebarcontroller');
           $('#sem_id').change(function(){
             var course_id = $('#course_id').val(); 
             var sem_id = $('#sem_id').val(); 
+            var period_count = $('#period_count').val(); 
             $.ajax({
                 type: "POST",
                 url: "<?php echo site_url(); ?>/tdata/gettimetbldata",
@@ -419,17 +421,35 @@ $this->load->view('components/sidebarcontroller');
                 dataType: "json",
                 success: function(response){
                   // <tr id="classtimetbl">
-                  console.log(response);
+                  // console.log(response);
+                  // console.log(response['subject'][0]);
 
-                  // $('#classtimetbl').remove();
-                  // $('#mytable').append("<tr id='classtimetbl'></tr>")
-                  // $.each(response['day'], function(index, value) {
+                  $('#classtimetbl').remove();
+                  $('#mytable').append("<tr id='classtimetbl'></tr>")
+                  $.each(response['day'], function(index, value) {
                     
-                  //   $('#classtimetbl').append("<tr><td>"+value['day_name']+"</td>")
-                  //   $(this).closest('tr').append("<td>"+index+"</td></tr>")
-     
+                    // sconsole.log(index);
+                    $('#classtimetbl').append("<tr id="+index+"><td>"+value+"</td>");
+                   
+                    $.each(response['subject'][index], function(sub_index, value) {
+                      $('#'+index).append("<td>"+value+"</td>");
+                      console.log(value);
+                    });
+                    $('#'+index).append("</tr>");
+                    // for(var i=0;i<period_count;i++)
+                    // {
+                      
+                    // }
+                   
+                    // $.each(period_count, function(count_index) {
+                    //   console.log(count_index)
+                    // });
+                    // $('#'+index).append("</tr>");
+                    // $('#classtimetbl').append("<tr><td>"+value['day_name']+"</td>")
+                    // $(this).closest('tr').append("<td>"+index+"</td></tr>")
+                  // console.log(index)
                        
-                  // });
+                  });
 
 
                   

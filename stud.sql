@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2020 at 06:30 PM
+-- Generation Time: Mar 21, 2020 at 09:19 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.1.27
 
@@ -39,6 +39,58 @@ CREATE TABLE `attendance_tbl` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `classtimetable_tbl`
+--
+
+CREATE TABLE `classtimetable_tbl` (
+  `ct_id` int(11) NOT NULL,
+  `f_course_id` int(11) DEFAULT NULL,
+  `f_sem_id` int(11) DEFAULT NULL,
+  `f_day_id` int(11) DEFAULT NULL,
+  `f_period_id` int(11) DEFAULT NULL,
+  `f_subject_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `classtimetable_tbl`
+--
+
+INSERT INTO `classtimetable_tbl` (`ct_id`, `f_course_id`, `f_sem_id`, `f_day_id`, `f_period_id`, `f_subject_id`) VALUES
+(9, 1236, 1, 1, 1, 6),
+(10, 1236, 1, 2, 1, 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_subject_tbl`
+--
+
+CREATE TABLE `course_subject_tbl` (
+  `cs_id` int(11) NOT NULL,
+  `f_course_id` int(11) DEFAULT NULL,
+  `f_subject_id` int(11) DEFAULT NULL,
+  `f_sem_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `course_subject_tbl`
+--
+
+INSERT INTO `course_subject_tbl` (`cs_id`, `f_course_id`, `f_subject_id`, `f_sem_id`) VALUES
+(1, 222, 3, NULL),
+(2, 222, 7, NULL),
+(3, 222, 6, NULL),
+(4, 222, 7, NULL),
+(5, 222, 4, NULL),
+(6, 222, 7, NULL),
+(7, 222, 7, NULL),
+(8, 222, 8, NULL),
+(9, 222, 6, NULL),
+(10, 222, 6, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `course_tbl`
 --
 
@@ -53,18 +105,28 @@ CREATE TABLE `course_tbl` (
 --
 
 INSERT INTO `course_tbl` (`crse_id`, `crse_name`, `f_dept_id`) VALUES
-(222, 'ssss', 0),
 (1234, 'maths', 0),
-(1235, NULL, 0),
-(1236, 'bba', 0),
-(1237, 'bba', 0),
-(1238, 'bsw', 0),
-(1239, NULL, 0),
-(1240, 'sdsdfd', 0),
-(1241, 'fdvdfvdf', 0),
-(1242, 'svsdsdf', 0),
-(1243, 'vdvsfd', 0),
-(1244, 'hgfhg', 0);
+(1236, 'bba', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `day_tbl`
+--
+
+CREATE TABLE `day_tbl` (
+  `day_id` int(11) NOT NULL,
+  `day_name` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `day_tbl`
+--
+
+INSERT INTO `day_tbl` (`day_id`, `day_name`) VALUES
+(1, 'mondays'),
+(2, 'tuesday'),
+(3, 'wednesday');
 
 -- --------------------------------------------------------
 
@@ -120,6 +182,27 @@ CREATE TABLE `marklist_tbl` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `period_tbl`
+--
+
+CREATE TABLE `period_tbl` (
+  `period_id` int(11) NOT NULL,
+  `period_name` varchar(15) DEFAULT NULL,
+  `period_time` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `period_tbl`
+--
+
+INSERT INTO `period_tbl` (`period_id`, `period_name`, `period_time`) VALUES
+(1, 'period 1', 'dvsd'),
+(2, 'period 2', 'wetwe'),
+(3, 'period 3', 'cvxcvxcv');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `regstn_tbl`
 --
 
@@ -133,7 +216,7 @@ CREATE TABLE `regstn_tbl` (
   `password` varchar(40) NOT NULL,
   `f_utype_id` int(40) NOT NULL,
   `f_crse_id` int(40) NOT NULL,
-  `f_sub_id` int(40) NOT NULL,
+  `f_sem_id` int(40) NOT NULL,
   `is_active` int(40) NOT NULL,
   `create_time` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -142,12 +225,31 @@ CREATE TABLE `regstn_tbl` (
 -- Dumping data for table `regstn_tbl`
 --
 
-INSERT INTO `regstn_tbl` (`user_id`, `emp_code`, `admssn_no`, `first_name`, `last_name`, `emailid`, `password`, `f_utype_id`, `f_crse_id`, `f_sub_id`, `is_active`, `create_time`) VALUES
+INSERT INTO `regstn_tbl` (`user_id`, `emp_code`, `admssn_no`, `first_name`, `last_name`, `emailid`, `password`, `f_utype_id`, `f_crse_id`, `f_sem_id`, `is_active`, `create_time`) VALUES
 (1, 234, 2222, 'deva', 'nandan', 'devanandandevendu@gmail.com', '22222222', 1, 1, 1, 0, '0000-00-00'),
 (2, 434, 4444, 'vijay', 'kumar', 'vijaykumar@gmail.com', '4444444', 1, 1, 1, 0, '0000-00-00'),
 (3, 546, 4445, 'helo', 'helllo', 'hello@gmail.com', '8888', 1, 1, 1, 0, '0000-00-00'),
 (4, 5656565, 432, 'deva', 'de', 'a@a', 'a', 1, 1, 1, 0, '0000-00-00'),
-(7, 23423, 234234, 'sdsdf', 'sdfsdf', 'fsdfsd@fsdg', '23423', 2, 2, 2, 0, '0000-00-00');
+(7, 23423, 234234, 'sdsdf', 'sdfsdf', 'fsdfsd@fsdg', '23423', 2, 2, 2, 0, '0000-00-00'),
+(8, 0, 0, 'sdfsdf', 'sfsdfs', 'fsdf@sfdfsdf', 'aaaaaa', 4, 1236, 1, 0, '0000-00-00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `semester_tbl`
+--
+
+CREATE TABLE `semester_tbl` (
+  `sem_id` int(11) NOT NULL,
+  `semester_name` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `semester_tbl`
+--
+
+INSERT INTO `semester_tbl` (`sem_id`, `semester_name`) VALUES
+(1, 'semester 1');
 
 -- --------------------------------------------------------
 
@@ -193,8 +295,7 @@ INSERT INTO `subject_tbl` (`sub_id`, `sub_name`, `f_crse_id`) VALUES
 (25, 'dghdfghdfgdf', 0),
 (26, 'dghdfghdfgdf', 0),
 (27, 'dfgdgdfgdfg', 0),
-(28, 'dgdfgdfg', 0),
-(29, 'vbnvbn', 0);
+(28, 'sdcsdjjjjjjj', 0);
 
 -- --------------------------------------------------------
 
@@ -212,16 +313,9 @@ CREATE TABLE `usertype_tbl` (
 --
 
 INSERT INTO `usertype_tbl` (`utype_id`, `usertype`) VALUES
-(1, NULL),
-(2, 'admin'),
 (3, 'admin'),
 (4, 'teachers'),
-(5, NULL),
-(6, NULL),
-(7, NULL),
-(8, NULL),
-(9, NULL),
-(10, NULL);
+(11, 'student');
 
 --
 -- Indexes for dumped tables
@@ -234,10 +328,28 @@ ALTER TABLE `attendance_tbl`
   ADD PRIMARY KEY (`attendance_id`);
 
 --
+-- Indexes for table `classtimetable_tbl`
+--
+ALTER TABLE `classtimetable_tbl`
+  ADD PRIMARY KEY (`ct_id`);
+
+--
+-- Indexes for table `course_subject_tbl`
+--
+ALTER TABLE `course_subject_tbl`
+  ADD PRIMARY KEY (`cs_id`);
+
+--
 -- Indexes for table `course_tbl`
 --
 ALTER TABLE `course_tbl`
   ADD PRIMARY KEY (`crse_id`);
+
+--
+-- Indexes for table `day_tbl`
+--
+ALTER TABLE `day_tbl`
+  ADD PRIMARY KEY (`day_id`);
 
 --
 -- Indexes for table `dept_tbl`
@@ -258,6 +370,12 @@ ALTER TABLE `marklist_tbl`
   ADD PRIMARY KEY (`mark_id`);
 
 --
+-- Indexes for table `period_tbl`
+--
+ALTER TABLE `period_tbl`
+  ADD PRIMARY KEY (`period_id`);
+
+--
 -- Indexes for table `regstn_tbl`
 --
 ALTER TABLE `regstn_tbl`
@@ -265,6 +383,12 @@ ALTER TABLE `regstn_tbl`
   ADD UNIQUE KEY `emp_code` (`emp_code`),
   ADD UNIQUE KEY `admssn_no` (`admssn_no`),
   ADD UNIQUE KEY `emailid` (`emailid`);
+
+--
+-- Indexes for table `semester_tbl`
+--
+ALTER TABLE `semester_tbl`
+  ADD PRIMARY KEY (`sem_id`);
 
 --
 -- Indexes for table `subject_tbl`
@@ -289,16 +413,34 @@ ALTER TABLE `attendance_tbl`
   MODIFY `attendance_id` int(100) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `classtimetable_tbl`
+--
+ALTER TABLE `classtimetable_tbl`
+  MODIFY `ct_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `course_subject_tbl`
+--
+ALTER TABLE `course_subject_tbl`
+  MODIFY `cs_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `course_tbl`
 --
 ALTER TABLE `course_tbl`
-  MODIFY `crse_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1245;
+  MODIFY `crse_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1237;
+
+--
+-- AUTO_INCREMENT for table `day_tbl`
+--
+ALTER TABLE `day_tbl`
+  MODIFY `day_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `dept_tbl`
 --
 ALTER TABLE `dept_tbl`
-  MODIFY `dept_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `dept_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `marklist_tbl`
@@ -307,22 +449,34 @@ ALTER TABLE `marklist_tbl`
   MODIFY `mark_id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `period_tbl`
+--
+ALTER TABLE `period_tbl`
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `regstn_tbl`
 --
 ALTER TABLE `regstn_tbl`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `semester_tbl`
+--
+ALTER TABLE `semester_tbl`
+  MODIFY `sem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `subject_tbl`
 --
 ALTER TABLE `subject_tbl`
-  MODIFY `sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `usertype_tbl`
 --
 ALTER TABLE `usertype_tbl`
-  MODIFY `utype_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `utype_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

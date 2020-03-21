@@ -94,6 +94,13 @@ class MenuController extends CI_Controller {
         $this->load->view('menu/addperiod'); 
 	}
 
+	public function viewstudent()
+	{
+		$result['course']=$this->DataModel->getCourse();
+		$result['semester']=$this->DataModel->getSemester();
+        $this->load->view('menu/viewstudent',$result); 
+	}
+
 
 
 

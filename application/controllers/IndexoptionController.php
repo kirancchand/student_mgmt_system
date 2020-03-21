@@ -59,9 +59,9 @@ class IndexoptionController extends CI_Controller {
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
 		$emailid = $this->input->post('email');
-		$usertype = $this->input->post('usertype');
-		$course = $this->input->post('course');
-		$subject = $this->input->post('subject');
+		$usertype = $this->input->post('f_utype_id');
+		$course = $this->input->post('f_crse_id');
+		$semester = $this->input->post('f_sem_id');
 		$admssn_no = $this->input->post('admn_no');
 		$emp_code = $this->input->post('emp_code');
 		$pass = $this->input->post('password');
@@ -86,7 +86,7 @@ class IndexoptionController extends CI_Controller {
 			'emailid'=>$emailid,
 			 'f_utype_id'=>$usertype,
 			 'f_crse_id'=>$course,
-			 'f_sub_id'=>$subject,
+			 'f_sem_id'=>$semester,
 			 'admssn_no'=>$admssn_no,
 			 'emp_code'=>$emp_code,
 			'password' => $pass,

@@ -47,34 +47,54 @@
         <input type="email" id="email" name="email" class="form-control" placeholder="Email ID" >
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
-      <div class="form-group has-feedback">
-      <label for="usertype">usertype </label>
-      <select name="usertype" id="usertype">
-        <option value="1">student</option>
-        <option value="2">teacher</option>
-        <option value="3">admin</option>
-      </select>
+      <div class="row">
+      <div class="col-xs-12">
+          <select  id="f_utype_id" name="f_utype_id"  class="form-control" style="width: 100%;">
+          <option selected="selected" value=''>Please Select UserType</option>
+          <?php
+            foreach ($usertype as $key => $value)
+            {
+          ?>
+            <option value='<?php echo $value['utype_id']; ?>'><?php echo $value['usertype'] ;?></option>
+          <?php
+            }
+          ?>
+          </select>
       </div>
-      <div class="form-group has-feedback">
-      
-      <label for="course">Course </label>
-      <select name ="course" id="Course">
-        <option value="1">bsc</option>
-        <option value="2">ba</option>
-        <option value="3">bca</option>
-        <option value="3">msc</option>
-        <option value="4">M.A</option>
-       </select>
-       </div> 
-       <div class="form-group has-feedback">
-       <label for="subject">Subject</label>
-       <select name ="subject" id="subject">
-        <option value="1">computer science</option>
-        <option value="2">biotechnology</option>
-        <option value="3">Arabic</option>
-        <option value="4">BCA<option>
-       </select>
-       </div>
+      </div>
+      <br/>
+       <div class="row">
+      <div class="col-xs-12">
+          <select  id="f_crse_id" name="f_crse_id"  class="form-control" style="width: 100%;">
+          <option selected="selected" value=''>Please Select Course</option>
+          <?php
+            foreach ($course as $key => $value)
+            {
+          ?>
+            <option value='<?php echo $value['crse_id']; ?>'><?php echo $value['crse_name'] ;?></option>
+          <?php
+            }
+          ?>
+          </select>
+      </div>
+      </div>
+      <br/>
+      <div class="row">
+      <div class="col-xs-12">
+          <select  id="f_sem_id" name="f_sem_id"  class="form-control" style="width: 100%;">
+          <option selected="selected" value=''>Please Select Semester</option>
+          <?php
+            foreach ($semester as $key => $value)
+            {
+          ?>
+            <option value='<?php echo $value['sem_id']; ?>'><?php echo $value['semester_name'] ;?></option>
+          <?php
+            }
+          ?>
+          </select>
+      </div>
+      </div>
+            <br/>
       <div class="form-group has-feedback">
       <input type="text" id="admn_no" name="admn_no" class="form-control" placeholder="admission No" >
       <span class="glyphicon glyphicon-lock form-control-feedback"></span>

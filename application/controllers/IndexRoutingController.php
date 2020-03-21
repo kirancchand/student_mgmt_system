@@ -17,6 +17,13 @@ class IndexRoutingController extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+	function __construct() { 
+		parent::__construct(); 
+		$this->load->helper('url'); 
+		$this->load->database(); 
+		$this->load->model('UserModel'); 
+		$this->load->model('DataModel'); 
+	 } 
 	public function index()
 	{
         $this->load->view('index'); 
@@ -24,13 +31,14 @@ class IndexRoutingController extends CI_Controller {
 
 	public function login()
 	{
-		$this->load->helper('url'); 
         $this->load->view('login'); 
 	}
 
 	public function register()
-	{
-		$this->load->helper('url'); 
-        $this->load->view('register'); 
+	{ 
+		$result['course']=$this->DataModel->getCourse();
+		$result['semester']=$this->DataModel->getSemester();
+		$result['usertype']=$this->DataModel->getUsertype();
+        $this->load->view('register',$result); 
 	}
 }

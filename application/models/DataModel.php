@@ -145,9 +145,6 @@
       public function getSubject_data($f_course_id,$f_sem_id,$f_day_id,$f_period_id) { 
 
 
-   
-         $result=$this->db->select('crse_name');
-
          $response = array();
           $this->db->select('f_subject_id');
           $this->db->from('classtimetable_tbl');
@@ -247,6 +244,16 @@
          $response = $query->result_array();
          return $response;
       } 
+
+      public function getUsertype() 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('usertype_tbl');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      }
 
       public function getmodelSubject($sub_id) 
       { 
@@ -402,6 +409,70 @@
          $result=$this->db->update('period_tbl',$data);
          return $result; 
       }
+      public function getDatatableStudent($table,$column_order,$column_search,$order,$course_id,$sem_id)
+      {
+          $this->_getDatatable_query($table,$column_order,$column_search,$order,$course_id,$sem_id);
+          if(intval($this->input->get("length"))!= -1)
+          $this->db->limit(intval($this->input->get("length")), intval($this->input->get("start")));
+          $query = $this->db->get();
+          return $query->result();
+      }
+      private function _getDatatableStudent_query($table,$column_order,$column_search,$order,$course_id,$sem_id)
+      {
+         
+        $this->db->from($table);
+        $this->db->where('f_crse_id',$course_id);
+        $this->db->where('f_sem_id',$sem_id);
+ 
+        $i = 0;
+     
+        foreach ($column_search as $item) // loop column 
+        {   $search=$this->input->get("search");
+            if($search['value']) // if datatable send POST for search
+            {
+                 
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_GET['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, $_GET['search']['value']);
+                }
+ 
+                if(count($column_search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+         
+        if(isset($_GET['order'])) // here order processing
+        {
+            $this->db->order_by($column_order[$_GET['order']['0']['column']], $_GET['order']['0']['dir']);
+        } 
+        else if(isset($order))
+        {
+            // $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+      }
+      
+     public  function count_filteredstudent($table,$column_order,$column_search,$order,$course_id,$sem_id)
+       {
+         $this->_getDatatableStudent_query($table,$column_order,$column_search,$order,$course_id,$sem_id);
+         $query = $this->db->get();
+         return $query->num_rows();
+       }
+ 
+    public function count_allstudent($table)
+       {     
+           $this->db->from($table);
+           return $this->db->count_all_results();
+       }
+
+
+
       public function getDatatable($table,$column_order,$column_search,$order)
       {
           $this->_getDatatable_query($table,$column_order,$column_search,$order);

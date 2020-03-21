@@ -60,6 +60,9 @@
             <li>
               <a href="<?php echo site_url('menu/addperiod'); ?>"><i class="fa fa-circle-o"></i> Add Period </a>
             </li>
+            <li>
+              <a href="<?php echo site_url('menu/viewstudent'); ?>"><i class="fa fa-circle-o"></i> View Student </a>
+            </li>
           </ul>
         </li>
       </ul>
