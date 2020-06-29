@@ -55,6 +55,9 @@
               <a href="<?php echo site_url('menu/addclasstimetbl'); ?>"><i class="fa fa-circle-o"></i> Add Class Timetable </a>
             </li>
             <li>
+              <a href="<?php echo site_url('menu/addyear'); ?>"><i class="fa fa-circle-o"></i> Add Year </a>
+            </li>
+            <li>
               <a href="<?php echo site_url('menu/addday'); ?>"><i class="fa fa-circle-o"></i> Add Day </a>
             </li>
             <li>
@@ -62,6 +65,9 @@
             </li>
             <li>
               <a href="<?php echo site_url('menu/viewstudent'); ?>"><i class="fa fa-circle-o"></i> View Student </a>
+            </li>
+            <li>
+              <a href="<?php echo site_url('menu/uploadmarks'); ?>"><i class="fa fa-circle-o"></i> Upload Marks </a>
             </li>
           </ul>
         </li>

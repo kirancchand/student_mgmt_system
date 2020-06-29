@@ -88,6 +88,13 @@ class MenuController extends CI_Controller {
 		
         $this->load->view('menu/addday'); 
 	}
+
+	public function addyear()
+	{
+        $this->load->view('menu/addyear'); 
+	}
+
+
 	public function addperiod()
 	{
 		
@@ -99,6 +106,13 @@ class MenuController extends CI_Controller {
 		$result['course']=$this->DataModel->getCourse();
 		$result['semester']=$this->DataModel->getSemester();
         $this->load->view('menu/viewstudent',$result); 
+	}
+
+	public function uploadmarks()
+	{
+		$result['course']=$this->DataModel->getCourse();
+		$result['semester']=$this->DataModel->getSemester();
+        $this->load->view('menu/uploadmarks',$result); 
 	}
 
 

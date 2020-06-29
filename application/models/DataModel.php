@@ -6,7 +6,75 @@
          
       } 
 
+      function getUserDetails(){
+        
+         $response = array();
+            
+         // Select record
+         $this->db->select('username,name,gender,email');
+         $q = $this->db->get('users');
+         $response = $q->result_array();
+         
+         return $response;
+     }
+      function insertRecord($record1,$record2,$record3,$record4,$record5){
+       
+        // return $record[3][0];
+        // exit;
 
+         if(count($record1) > 0){
+
+              $newdata = array(
+                     "external_mark" => trim($record1),
+                     "internal_mark" => trim($record2),
+                     "f_user_id" => trim($record3),
+                     "f_subject_id" => trim($record4),
+                     "f_sem_id" => trim($record5)
+                 );
+              
+           
+              // $newdata = array(
+              //        "external_mark" => trim($record[0]),
+              //        "internal_mark" => trim($record[1]),
+              //        "f_user_id" => trim($record[2]),
+              //        "f_subject_id" => trim($record[3]),
+              //        "f_sem_id" => trim($record[4])
+              //    );
+              // return $newdata;
+            $this->db->insert('marklist_tbl', $newdata);
+            return true;
+           // return 1;
+            // $response = array();
+            // $this->db->select('*');
+            // $this->db->from('dept_tbl');
+            // $this->db->where('dept_id', $dept_id);
+            // $query = $this->db->get();
+            // $response = $query->result_array();
+            // return $response;
+             // Check user
+            //  $response = array();
+             // $this->db->select('*');
+             // $this->db->where('username', $record[0]);
+             // $this->db->from('users');
+             // $q = $this->db->get();
+             // $response = $q->result_array();
+            //  return "hii";
+            //  exit;
+             // Insert record
+             // if(count($response) == 0){
+             //     $newuser = array(
+             //         "username" => trim($record[0]),
+             //         "name" => trim($record[1]),
+             //         "gender" => trim($record[2]),
+             //         "email" => trim($record[3])
+             //     );
+ 
+             //     $this->db->insert('users', $newuser);
+             // }
+             
+         }
+         
+     }
     public function addsub($data) { 
          if ($this->db->insert("subject_tbl", $data)) { 
             return true; 
@@ -111,6 +179,15 @@
             return false; 
         }
       }
+      public function addyear($data) { 
+         if ($this->db->insert("year_tbl", $data)) { 
+            return true; 
+        }
+        else
+        {
+            return false; 
+        }
+      }
       public function addperiod($data) { 
          if ($this->db->insert("period_tbl", $data)) { 
             return true; 
@@ -120,6 +197,85 @@
             return false; 
         }
       }
+      public function get_allstudents()
+      { 
+
+    
+         $response = array();
+         $this->db->select('r.*,c.crse_name,s.semester_name');
+         $this->db->from('regstn_tbl as r');
+         $this->db->join('course_tbl as c','c.crse_id=r.f_crse_id');
+         $this->db->join('semester_tbl as s','s.sem_id=r.f_sem_id');
+        $query = $this->db->get();
+        $response=$query->result_array();
+        return $response;
+          
+      } 
+
+
+
+      public function get_allcoursesubject()
+      { 
+
+         // SELECT c.crse_name,s.sub_name FROM `course_subject_tbl` as cs join course_tbl as c on c.crse_id=cs.f_course_id join subject_tbl as s on s.sub_id=cs.f_subject_id 
+         // SELECT `cs`.`cs_id`, `c`.`crse_name`, `s`.`sub_name` FROM `course_subject_tbl` as `cs` JOIN `course_tbl` as `c` ON `c`.`crse_id`=`cs`.`f_course_id` JOIN `subject_tbl` as `s` ON `s`.`sub_id`=`cs`.`f_subject_id` GROUP BY `cs`.`id`
+         $response = array();
+         $this->db->select('cs.cs_id,cs.f_course_id,c.crse_name,cs.f_sem_id,se.semester_name');
+         $this->db->from('course_subject_tbl as cs');
+         $this->db->join('course_tbl as c','c.crse_id=cs.f_course_id');
+         $this->db->join('semester_tbl as se','se.sem_id=cs.f_sem_id');
+         $this->db->group_by('cs.f_sem_id');
+         $this->db->group_by('cs.f_course_id');
+      //   $this->db->select('cs.cs_id,
+      //     c.crse_name,
+      //     s.sub_name');
+      //   $this->db->from('course_subject_tbl as cs');
+      //   $this->db->join('course_tbl as c','c.crse_id=cs.f_course_id');
+      //   $this->db->join('subject_tbl as s','s.sub_id=cs.f_subject_id');
+      //   $this->db->group_by('cs.cs_id');
+        // $this->db->join('user as u','ta.f_user_id=u.id ');
+        
+        $query = $this->db->get();
+        $response=$query->result_array();
+        return $response;
+          
+      } 
+
+      public function get_coursesem($f_course_id)
+      { 
+
+         $response = array();
+         $this->db->select('cs.f_sem_id,se.semester_name');
+         $this->db->from('course_subject_tbl as cs');
+         $this->db->where('cs.f_course_id',$f_course_id); 
+         $this->db->join('semester_tbl as se','se.sem_id=cs.f_sem_id');
+         $this->db->group_by('cs.f_sem_id');   
+         $query = $this->db->get();
+         $response=$query->result_array();
+         return $response;
+          
+      }
+
+
+      public function get_coursesubject($f_course_id,$f_sem_id)
+      { 
+
+         // SELECT c.crse_name,s.sub_name FROM `course_subject_tbl` as cs join course_tbl as c on c.crse_id=cs.f_course_id join subject_tbl as s on s.sub_id=cs.f_subject_id 
+         // SELECT `cs`.`cs_id`, `c`.`crse_name`, `s`.`sub_name` FROM `course_subject_tbl` as `cs` JOIN `course_tbl` as `c` ON `c`.`crse_id`=`cs`.`f_course_id` JOIN `subject_tbl` as `s` ON `s`.`sub_id`=`cs`.`f_subject_id` GROUP BY `cs`.`id`
+         $response = array();
+        $this->db->select('s.sub_name');
+        $this->db->from('course_subject_tbl as cs');
+        $this->db->join('course_tbl as c','c.crse_id=cs.f_course_id');
+        $this->db->join('subject_tbl as s','s.sub_id=cs.f_subject_id');
+        $this->db->join('semester_tbl as se','se.sem_id=cs.f_sem_id');
+        $this->db->where('cs.f_course_id',$f_course_id);
+        $this->db->where('cs.f_sem_id',$f_sem_id);
+        $query = $this->db->get();
+        $response=$query->result_array();
+        return $response;
+          
+      } 
+
       public function assign_timetblsubject($data) { 
 
 
@@ -159,10 +315,38 @@
       } 
 
 
-      
-      public function get_Course($crse_id) 
+       public function get_Header($course_id,$sem_id)
       { 
-         $this->get_Course_query($crse_id);
+         $response = array();
+         $this->db->select('cs.f_subject_id,s.sub_name');
+         $this->db->from('course_subject_tbl as cs');
+         $this->db->join('subject_tbl as s','s.sub_id=cs.f_subject_id');
+         $this->db->where('f_course_id', $course_id);
+         $this->db->where('f_sem_id', $sem_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+
+
+      public function get_Studentxl($course_id,$sem_id)
+      { 
+         $response = array();
+         $this->db->select('cs.*,c.crse_name,s.semester_name');
+         $this->db->from('regstn_tbl as cs');
+         $this->db->join('course_tbl as c','c.crse_id=cs.f_crse_id');
+         $this->db->join('semester_tbl as s','s.sem_id=cs.f_sem_id');
+         $this->db->where('f_crse_id', $course_id);
+         $this->db->where('f_sem_id', $sem_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+
+
+      public function get_Course($course_id,$sem_id)
+      { 
+         $this->get_Course_query($course_id);
          $query = $this->db->get();
          return $query->result();
 
@@ -171,7 +355,7 @@
       public function get_Course_query($crse_id)
        {
 
-         $this->db->select('crse_name');
+         $this->db->select('crse_name,duration');
          $this->db->from('course_tbl');
          $this->db->where('crse_id', $crse_id);
 
@@ -224,6 +408,37 @@
          return $response;
        } 
 
+       public function gettimetblDatas($course_id,$sem_id) 
+       { 
+         $response = array();
+         $this->db->select('ct.ct_id,d.day_id,d.day_name');
+         $this->db->from('classtimetable_tbl as ct');
+         $this->db->join('day_tbl as d','d.day_id=ct.f_day_id');
+         $this->db->where('f_course_id', $course_id);
+         $this->db->where('f_sem_id', $sem_id);
+         $this->db->group_by('f_sem_id');
+         $this->db->group_by('f_course_id');
+         $this->db->group_by('f_day_id');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+       } 
+
+       public function gettimetbl($course_id,$sem_id,$day_id)
+       { 
+         $response = array();
+         $this->db->select('p.period_name,s.sub_name');
+         $this->db->from('classtimetable_tbl as ct');
+         $this->db->join('period_tbl as p','p.period_id=ct.f_period_id');
+         $this->db->join('subject_tbl as s','s.sub_id=ct.f_subject_id');
+         $this->db->where('f_course_id', $course_id);
+         $this->db->where('f_sem_id', $sem_id);
+         $this->db->where('f_day_id', $day_id);
+         $this->db->order_by('ct.f_period_id');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+       } 
 
       public function getCourse() 
       { 
@@ -255,6 +470,15 @@
          return $response;
       }
 
+      public function getYear() 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('year_tbl');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      }
       public function getmodelSubject($sub_id) 
       { 
          $response = array();
@@ -386,6 +610,19 @@
          $response = $query->result_array();
          return $response;
       } 
+
+      public function getmodelYear($year_id) 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('year_tbl');
+         $this->db->where('year_id', $year_id);
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+
+
       public function dayUpdate($data,$id) 
       { 
         $this->db->where('day_id',$id);
@@ -393,6 +630,12 @@
          return $result; 
       }
 
+      public function yearUpdate($data,$id) 
+      { 
+        $this->db->where('year_id',$id);
+         $result=$this->db->update('year_tbl',$data);
+         return $result; 
+      }
       public function getmodelPeriod($period_id) 
       { 
          $response = array();
@@ -409,20 +652,105 @@
          $result=$this->db->update('period_tbl',$data);
          return $result; 
       }
-      public function getDatatableStudent($table,$column_order,$column_search,$order,$course_id,$sem_id)
+
+      public function getMarklist($user_id) 
+      { 
+         $response = array();
+         $this->db->select('*');
+         $this->db->from('marklist_tbl');
+         $this->db->where('f_user_id', $user_id);
+         $this->db->group_by('f_subject_id');
+         $this->db->group_by('f_sem_id');
+         $query = $this->db->get();
+         $response = $query->result_array();
+         return $response;
+      } 
+        public function moveSem($course_id,$sem_id)
+      { 
+
+        $response = array();
+        $duration = array();
+         $this->db->select('duration');
+         $this->db->from('course_tbl');
+         $this->db->where('crse_id', $course_id);
+        $duration_query = $this->db->get();
+        $duration = $duration_query->result_array();
+        $d = $duration[0]['duration'];
+        if($sem_id==$d)
+        {
+          $new_sem = 0;
+          $data=array(
+              'f_sem_id' => $new_sem,
+            ); 
+          $this->db->where('f_crse_id',$course_id);
+          $this->db->where('f_sem_id',$sem_id);
+          $result=$this->db->update('regstn_tbl',$data);
+          return $result; 
+        }
+        else
+        {
+          $sem_idnew = $sem_id+1;
+          $this->db->select('f_sem_id');
+          $this->db->from('regstn_tbl');
+          $this->db->where('f_crse_id',$course_id);
+          $this->db->where('f_sem_id',$sem_idnew);
+          $query = $this->db->get();
+          $response = $query->result_array();
+          // $new_sem = $response[0]['f_sem_id'] + 1;
+          //$response[0]['f_sem_id'] + 1;
+
+          if($response==null)
+          {
+
+            $new_sem = $sem_idnew;
+            $data=array(
+              'f_sem_id' => $new_sem,
+            ); 
+          }
+          else
+          {
+            $new_sem = $response[0]['f_sem_id'];
+            
+             if($new_sem==$d)
+             {
+                $data=array(
+                  'f_sem_id' => 0,
+               );
+              $this->db->where('f_crse_id',$course_id);
+              $this->db->where('f_sem_id',$sem_idnew);
+              $this->db->update('regstn_tbl',$data);
+             }
+            
+            $data=array(
+                    'f_sem_id' => $new_sem,
+                 );
+
+           
+          }
+            $this->db->where('f_crse_id',$course_id);
+            $this->db->where('f_sem_id',$sem_id);
+            $result=$this->db->update('regstn_tbl',$data);
+       
+            return $result; 
+
+        }
+         
+         
+      }
+      public function getDatatableStudent($table,$column_order,$column_search,$order)
       {
-          $this->_getDatatable_query($table,$column_order,$column_search,$order,$course_id,$sem_id);
+          $this->_getDatatableStudent_query($table,$column_order,$column_search,$order);
           if(intval($this->input->get("length"))!= -1)
           $this->db->limit(intval($this->input->get("length")), intval($this->input->get("start")));
           $query = $this->db->get();
           return $query->result();
       }
-      private function _getDatatableStudent_query($table,$column_order,$column_search,$order,$course_id,$sem_id)
+      private function _getDatatableStudent_query($table,$column_order,$column_search,$order)
       {
          
         $this->db->from($table);
-        $this->db->where('f_crse_id',$course_id);
-        $this->db->where('f_sem_id',$sem_id);
+        // $this->db->where('f_crse_id',$course_id);
+        // $this->db->where('f_sem_id',$sem_id);
  
         $i = 0;
      
@@ -458,9 +786,9 @@
         }
       }
       
-     public  function count_filteredstudent($table,$column_order,$column_search,$order,$course_id,$sem_id)
+     public  function count_filteredstudent($table,$column_order,$column_search,$order)
        {
-         $this->_getDatatableStudent_query($table,$column_order,$column_search,$order,$course_id,$sem_id);
+         $this->_getDatatableStudent_query($table,$column_order,$column_search,$order);
          $query = $this->db->get();
          return $query->num_rows();
        }

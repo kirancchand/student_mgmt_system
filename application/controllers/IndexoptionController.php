@@ -62,6 +62,7 @@ class IndexoptionController extends CI_Controller {
 		$usertype = $this->input->post('f_utype_id');
 		$course = $this->input->post('f_crse_id');
 		$semester = $this->input->post('f_sem_id');
+		$year = $this->input->post('f_year_id');
 		$admssn_no = $this->input->post('admn_no');
 		$emp_code = $this->input->post('emp_code');
 		$pass = $this->input->post('password');
@@ -87,6 +88,7 @@ class IndexoptionController extends CI_Controller {
 			 'f_utype_id'=>$usertype,
 			 'f_crse_id'=>$course,
 			 'f_sem_id'=>$semester,
+			 'f_year_id'=>$year,
 			 'admssn_no'=>$admssn_no,
 			 'emp_code'=>$emp_code,
 			'password' => $pass,

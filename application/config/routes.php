@@ -72,8 +72,11 @@ $route['menu/assignsubject'] = 'MenuController/assignsubject';
 $route['menu/addsem']='MenuController/addsem';
 $route['menu/addclasstimetbl']='MenuController/addclasstimetbl';
 $route['menu/addday']='MenuController/addday';
+$route['menu/addyear']='MenuController/addyear';
 $route['menu/addperiod']='MenuController/addperiod';
 $route['menu/viewstudent']='MenuController/viewstudent';
+$route['menu/uploadmarks']='MenuController/uploadmarks';
+
 
 
 $route['data/addsub'] = 'DataController/addsub';
@@ -84,6 +87,7 @@ $route['data/assignsubject'] = 'DataController/assignsubject';
 $route['data/addsem'] = 'DataController/addsem';
 $route['data/assign_timetblsubject'] = 'DataController/assign_timetblsubject';
 $route['data/addday']='DataController/addday';
+$route['data/addyear']='DataController/addyear';
 $route['data/addperiod']='DataController/addperiod';
 
 
@@ -95,9 +99,10 @@ $route['tdata/getusertypedata'] = 'DataController/getusertypeData';
 $route['tdata/getassignsubjectdata'] = 'DataController/getassignsubjectdata';
 $route['tdata/getsemesterdata'] = 'DataController/getsemesterData';
 $route['tdata/getdaydata'] = 'DataController/getdayData';
+$route['tdata/getyeardata'] = 'DataController/getyeardata';
 $route['tdata/getperioddata'] = 'DataController/getperiodData';
 $route['tdata/gettimetbldata'] = 'DataController/gettimetblData';
-$route['tdata/getstudentdata'] = 'DataController/getstudentData';
+$route['tdata/getstudentdata'] = 'DataController/getstudentDatas';
 
 $route['mdata/getmodelsubject'] = 'DataController/getmodelsubject';
 $route['mdata/subjectdelete'] = 'DataController/subjectdelete';
@@ -123,10 +128,15 @@ $route['mdata/semesterupdate'] = 'DataController/semesterupdate';
 $route['mdata/getmodelday'] = 'DataController/getmodelday';
 $route['mdata/dayupdate'] = 'DataController/dayupdate';
 
+$route['mdata/getmodelyear'] = 'DataController/getmodelyear';
+$route['mdata/yearupdate'] = 'DataController/yearupdate';
+
 $route['mdata/getmodelperiod'] = 'DataController/getmodelperiod';
 $route['mdata/periodupdate'] = 'DataController/periodupdate';
 
+$route['mdata/excelexport'] = 'DataController/excelexport';
 
+$route['mdata/getmarklist'] = 'DataController/getmarklist';
 
 $route['menudata/singletable'] = 'DataController/singletable';
 $route['datacollection/datatablegetconnectivitydata'] = 'DataController/datatablegetconnectivitydata';
@@ -139,9 +149,13 @@ $route['datacollection/datatablegetbusconnectivitydata'] = 'DataController/get_p
 
 $route['menudata/get_place'] = 'DataController/get_place';
 
+$route['menu/users'] = 'DataController/users';
+$route['menu/marklist'] = 'DataController/marklist';
+$route['menu/exportCSV'] = 'DataController/exportCSV';
+$route['menu/exportStudent'] = 'DataController/exportStudent';
 
 
-
+$route['student/movesem']='DataController/moveSem';
 
 
 

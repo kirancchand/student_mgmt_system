@@ -39,6 +39,7 @@ class IndexRoutingController extends CI_Controller {
 		$result['course']=$this->DataModel->getCourse();
 		$result['semester']=$this->DataModel->getSemester();
 		$result['usertype']=$this->DataModel->getUsertype();
+		$result['year']=$this->DataModel->getYear();
         $this->load->view('register',$result); 
 	}
 }

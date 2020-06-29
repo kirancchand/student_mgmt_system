@@ -67,7 +67,17 @@ $this->load->view('components/sidemenu');
       <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title">Add Semester</h3>
+          <?php 
+	if(isset($response)){
+		echo $response;
+	}
+	?>
+	<form method='post' action='users' enctype="multipart/form-data">
+		<input type='file' name='file' >
+		<input type='submit' value='Upload' name='upload'>
+	</form>
 
+  <a href='<?= base_url() ?>index.php/menu/exportCSV'>Export</a><br><br>
      <form id="semesterform"> 
 
           <div class="box-tools pull-right">

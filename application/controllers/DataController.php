@@ -27,6 +27,165 @@ class dataController extends CI_Controller {
 
       } 
 
+
+      public function marklist(){
+
+        // Check form submit or not 
+        $course_id = $this->input->post('course_id');
+        $sem_id = $this->input->post('sem_id');
+
+         if($this->input->post('upload') != NULL ){ 
+
+             $data = array(); 
+             if(!empty($_FILES['file']['name'])){ 
+
+              // Set preference 
+              $config['upload_path'] = 'assets/files/'; 
+              $config['allowed_types'] = 'csv'; 
+              $config['max_size'] = '1000'; // max_size in kb 
+              $config['file_name'] = $_FILES['file']['name']; 
+            // echo $config['upload_path'];
+              // Load upload library 
+              $this->load->library('upload',$config); 
+            
+              // File upload
+              if($this->upload->do_upload('file')){ 
+
+                 // Get data about the file
+                 $uploadData = $this->upload->data(); 
+                 $filename = $uploadData['file_name']; 
+
+                 // Reading file
+                        $file = fopen("assets/files/".$filename,"r");
+                        $i = 0;
+    
+                        $importData_arr = array();
+                        $studentmark_arr = array();
+              
+                        while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                            $num = count($filedata);
+      
+                            for ($c=0; $c < $num; $c++) {
+                                $importData_arr[$i][] = $filedata[$c];   
+                            }
+                            $i++;
+                             
+                        }
+                        fclose($file);
+                        $skip = 0;
+
+                        for($j=2;$j<$i;$j++)
+                        {
+                         
+                           for($p=7;$p<$num;$p++)
+                          { 
+                              if($p%2==1)
+                              {
+                                    $q=$p+1;
+                                   // echo $j.$p;
+                                   $studentmark_arr[$j][0] = $importData_arr[$j][$p];
+                                   $studentmark_arr[$j][1] = $importData_arr[$j][$q];
+                                   $studentmark_arr[$j][2] = $importData_arr[$j][0];
+                                   $studentmark_arr[$j][3] = $importData_arr[0][$p];
+                                   $studentmark_arr[$j][4] = $sem_id;
+                                   $k=$this->DataModel->insertRecord($studentmark_arr[$j][0],$studentmark_arr[$j][1],$studentmark_arr[$j][2],$studentmark_arr[$j][3],$studentmark_arr[$j][4]);
+                                   // echo json_encode($k);
+                        
+                                   // echo json_encode($importData_arr[$j][$q]);
+                              }         
+                          }
+
+                           
+                        }
+                        // echo json_encode($studentmark_arr);
+                           // echo json_encode($studentmark_arr[2][0]);
+                           // echo json_encode($importData_arr[2][7]);
+                         // echo json_encode($p);
+                         // exit;
+              // echo "hyy";
+              // exit;
+                        // insert import data
+                        // foreach($studentmark_arr as $markdata){
+                        //     if($skip != 0){
+                        //         $k=$this->DataModel->insertRecord($markdata);
+                        //         //echo json_encode($k);
+                                
+                        //     }
+                        //     $skip ++;
+                        // }
+                        // echo json_encode($k);
+                        // exit;
+                 $data['response'] = 'successfully uploaded '.$filename; 
+              }else{ 
+              $data['response'] = $this->upload->display_errors();
+                 // $data['response'] = array('error' => $this->upload->display_errors());
+              } 
+             }else{ 
+              $data['response'] = 'failed'; 
+             } 
+             // load view 
+              $this->load->view('menu/uploadmarks',$data); 
+          }else{
+             // load view 
+             $this->load->view('users_view'); 
+          } 
+    
+      }
+
+      public function exportCSV(){
+		
+        // file name
+        $filename = 'users_'.date('Ymd').'.csv';
+        
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=$filename");
+        header("Content-Type: application/csv; "); 
+    
+        // get data
+        $usersData = $this->DataModel->getUserDetails();
+    
+        // file creation
+        $file = fopen('php://output', 'w');
+    
+        $header = array("Username","Name","Gender","Email");
+        fputcsv($file, $header);
+    
+        foreach ($usersData as $key=>$line){
+         fputcsv($file,$line);
+        }
+    
+        fclose($file);
+        exit;
+      }
+
+  public function exportStudent(){
+    
+
+    return true;
+        // // file name
+        // $filename = 'users_'.date('Ymd').'.csv';
+        
+        // header("Content-Description: File Transfer");
+        // header("Content-Disposition: attachment; filename=$filename");
+        // header("Content-Type: application/csv; "); 
+    
+        // // get data
+        // $usersData = $this->DataModel->getUserDetails();
+    
+        // // file creation
+        // $file = fopen('php://output', 'w');
+    
+        // $header = array("Username","Name","Gender","Email");
+        // fputcsv($file, $header);
+    
+        // foreach ($usersData as $key=>$line){
+        //  fputcsv($file,$line);
+        // }
+    
+        // fclose($file);
+        // exit;
+      }
+
  public function get_place()
  {
   $bus_no=1000;
@@ -108,6 +267,7 @@ class dataController extends CI_Controller {
               $row = array();
               $row[] = $no;
               $row[] = $r->crse_name;
+              $row[] = $r->duration;
               $row[] = '
               <button type="button" id="'.$r->crse_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
               <button type="button" id="'.$r->crse_id.'"  class="btn btn-danger delete_btn">delete</button';
@@ -221,49 +381,76 @@ class dataController extends CI_Controller {
 
   public function getassignsubjectdata()
   {
-		// Datatables Variables
-    $draw = intval($this->input->get("draw"));
-    $start = intval($this->input->get("start"));
-    $length = intval($this->input->get("length"));
-    $table = 'course_subject_tbl';
-    $column_order = array('cs_id','f_course_id','f_subject_id');
-    $column_search = array('cs_id','f_course_id','f_subject_id'); 
-    $order = array('cs_id' => 'desc'); 
+    $coursesubject_data=array();
+    $coursesem=array();
+    $course=array();
+    $subject=array();
+    $course['data']=$this->DataModel->get_allcoursesubject();
 
-   $assignsubject_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
-  //  echo json_encode($subject_result);
-  //  exit();
-   $data = array();
-   $no = $start;
+    foreach( $course['data'] as $key => $value)
+      {
+        // $coursesem['data']=$this->DataModel->get_coursesem($value['f_course_id']);
+        $coursesubject_data['data'][$key]['id']=$value['cs_id'];
+        $coursesubject_data['data'][$key]['course']=$value['crse_name'];
+        $coursesubject_data['data'][$key]['sem']=$value['semester_name'];
+        $subject['data']=$this->DataModel->get_coursesubject($value['f_course_id'],$value['f_sem_id']);
+        $coursesubject_data['data'][$key]['subject']=$subject['data'];
+        // foreach( $coursesem['data'] as $k => $v)
+        // {
+        //   $subject['data']=$this->DataModel->get_coursesubject($value['f_course_id'],$v['f_sem_id']);
+        //   $coursesubject_data['data'][$key]['sem'][$k]['subject']=$subject['data'];
+        // }
+       
+        
+        // $coursesubject['data'][$key]['subject']=$coursesubject['data'];
+        // $task_data['data'][$key]['btn']='<button type="button" id="'.$value['id'].'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update/view</button>';
+      }
+    
+    echo json_encode($coursesubject_data);
+
+	// 	// Datatables Variables
+  //   $draw = intval($this->input->get("draw"));
+  //   $start = intval($this->input->get("start"));
+  //   $length = intval($this->input->get("length"));
+  //   $table = 'course_subject_tbl';
+  //   $column_order = array('cs_id','f_course_id','f_subject_id');
+  //   $column_search = array('cs_id','f_course_id','f_subject_id'); 
+  //   $order = array('cs_id' => 'desc'); 
+
+  //  $assignsubject_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
+  // //  echo json_encode($subject_result);
+  // //  exit();
+  //  $data = array();
+  //  $no = $start;
 
 
-   foreach($assignsubject_result as $r) {
-               $no++;
+  //  foreach($assignsubject_result as $r) {
+  //              $no++;
               
-              $row = array();
-              $row[] = $no;
-              $row[] = $r->f_course_id;
-              $course=$this->DataModel->get_Course($r->f_course_id);
-              $row[] = $course;
-              $row[] = '
-              <button type="button" id="'.$r->cs_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
-              ';
-              $data[] = $row;
-              // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
+  //             $row = array();
+  //             $row[] = $no;
+  //             $row[] = $r->f_course_id;
+  //             $course=$this->DataModel->get_Course($r->f_course_id);
+  //             $row[] = $course;
+  //             $row[] = '
+  //             <button type="button" id="'.$r->cs_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+  //             ';
+  //             $data[] = $row;
+  //             // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
              
-    }
+  //   }
 
  
-      $output = array(
-                  "draw" => $draw,
-                  "recordsTotal" => $this->DataModel->count_all($table),
-                  "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
-                  "data" => $data,
-          );
+  //     $output = array(
+  //                 "draw" => $draw,
+  //                 "recordsTotal" => $this->DataModel->count_all($table),
+  //                 "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
+  //                 "data" => $data,
+  //         );
 
   
-  //output to json format
-  echo json_encode($output);
+  // //output to json format
+  // echo json_encode($output);
 
   }
   public function getsemesterData()
@@ -356,6 +543,54 @@ class dataController extends CI_Controller {
 
   }
 
+
+  public function getyearData()
+  {
+		// Datatables Variables
+    $draw = intval($this->input->get("draw"));
+    $start = intval($this->input->get("start"));
+    $length = intval($this->input->get("length"));
+    $table = 'year_tbl';
+    $column_order = array('year_id','year');
+    $column_search = array('year_id','year'); 
+    $order = array('year_id' => 'asc'); 
+
+   $year_result=$this->DataModel->getDatatable($table,$column_order,$column_search,$order);
+  //  echo json_encode($subject_result);
+  //  exit();
+   $data = array();
+   $no = $start;
+
+
+   foreach($year_result as $r) {
+               $no++;
+              $row = array();
+              $row[] = $no;
+              $row[] = $r->year;
+              $row[] = '
+              <button type="button" id="'.$r->year_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
+              ';
+              $data[] = $row;
+              // <button type="button" id="'.$r->dept_id.'"  class="btn btn-danger delete_btn">delete</button
+             
+    }
+
+ 
+      $output = array(
+                  "draw" => $draw,
+                  "recordsTotal" => $this->DataModel->count_all($table),
+                  "recordsFiltered" => $this->DataModel->count_filtered($table,$column_order,$column_search,$order),
+                  "data" => $data,
+          );
+
+  
+  //output to json format
+  echo json_encode($output);
+
+  }
+
+
+
   public function getperiodData()
   {
 		// Datatables Variables
@@ -402,10 +637,37 @@ class dataController extends CI_Controller {
 
   }
 
+
+ public function moveSem()
+  {
+    $course_id = $this->input->post('course_id');
+    $sem_id = $this->input->post('sem_id');
+    // $course_id = '1238';
+    // $sem_id = '2';
+
+    $result = $this->DataModel->moveSem($course_id,$sem_id);
+    echo json_encode($result);
+
+  }
+
+  public function getstudentDatas()
+  {
+    $students=array();
+    $students['data']=$this->DataModel->get_allstudents();
+    
+    echo json_encode($students);
+  }
   public function getstudentData()
   {
-    $course_id = $this->input->get('course_id');
-    $sem_id = $this->input->get('sem_id');
+    // $course_id = $this->input->get('course_id');
+    // $sem_id = $this->input->get('sem_id');
+    // if($course_id==null|| $sem_id==null)
+    // {
+    //   $course_id = 0;
+    //   $sem_id = 0;
+    // }
+    // echo json_encode($sem_id);
+    // exit();
 		// Datatables Variables
     $draw = intval($this->input->get("draw"));
     $start = intval($this->input->get("start"));
@@ -415,9 +677,10 @@ class dataController extends CI_Controller {
     $column_search = array('user_id','first_name','last_name','admssn_no');
     $order = array('user_id' => 'asc'); 
 
-   $student_result=$this->DataModel->getDatatableStudent($table,$column_order,$column_search,$order,$course_id,$sem_id);
-  //  echo json_encode($subject_result);
-  //  exit();
+   // $student_result=$this->DataModel->getDatatableStudent($table,$column_order,$column_search,$order,$course_id,$sem_id);
+    // echo json_encode($student_result);
+    // exit();
+  $student_result=$this->DataModel->getDatatableStudent($table,$column_order,$column_search,$order);
    $data = array();
    $no = $start;
 
@@ -429,6 +692,8 @@ class dataController extends CI_Controller {
               $row[] = $r->admssn_no;
               $row[] = $r->first_name;
               $row[] = $r->last_name;
+              $row[] = $r->f_crse_id;
+              $row[] = $r->f_sem_id;
               $row[] = '
               <button type="button" id="'.$r->user_id.'" data-toggle="modal" data-target="#myModal" class="btn btn-info updateview_btn">update</button>
               ';
@@ -441,7 +706,7 @@ class dataController extends CI_Controller {
       $output = array(
                   "draw" => $draw,
                   "recordsTotal" => $this->DataModel->count_allstudent($table),
-                  "recordsFiltered" => $this->DataModel->count_filteredstudent($table,$column_order,$column_search,$order,$course_id,$sem_id),
+                  "recordsFiltered" => $this->DataModel->count_filteredstudent($table,$column_order,$column_search,$order),
                   "data" => $data,
           );
 
@@ -450,14 +715,10 @@ class dataController extends CI_Controller {
   echo json_encode($output);
 
   }
-  public function gettimetblData()
+  public function gettimetblDatas()
   {
     $course_id = $this->input->post('course_id');
     $sem_id = $this->input->post('sem_id');
-
-
-    $course_id = 1236;
-    $sem_id = 1;
 
     $result['timetbl'] = $this->DataModel->gettimetblData($course_id,$sem_id);  
     $result['subject']=$this->DataModel->getSubject();
@@ -506,6 +767,58 @@ class dataController extends CI_Controller {
     
     echo json_encode($has_subject);
   }
+
+
+
+  public function gettimetblData()
+  {
+
+    $daytbl=array();
+    $timetbl=array();
+
+    $course_id = $this->input->post('course_id');
+    $sem_id = $this->input->post('sem_id');
+    $daytbl['data'] = $this->DataModel->gettimetblDatas($course_id,$sem_id);  
+    foreach( $daytbl['data'] as $key => $value)
+      {
+        $timetbl['data'][$key]['day']=$value['day_name'];
+        $timetbl['data'][$key]['timetbl']=$this->DataModel->gettimetbl($course_id,$sem_id,$value['day_id']);
+        // $timetbl['data']=$this->DataModel->gettimetblDatas($course_id,$sem_id);
+      }
+    echo json_encode($timetbl);
+    // $result['timetbl'] = $this->DataModel->gettimetblData($course_id,$sem_id);  
+    // $result['subject']=$this->DataModel->getSubject();
+		// $result['day']=$this->DataModel->getDay();
+    // $result['period']=$this->DataModel->getPeriod();
+    // $i=0;
+    // foreach($result['day'] as $value)
+    //     { 
+    //       $day_id=$value['day_id'];
+    //       $has_subject['day'][$i]=$value['day_name'];
+    //       $j=0;
+    //         foreach($result['period'] as $value)
+    //           {
+    //             $has_subject['subject'][$i][$j]=$this->DataModel->getSubject_data($course_id,$sem_id,$day_id,$value['period_id']);
+    //             if($has_subject['subject'][$i][$j]==null)
+    //             {
+    //               $has_subject['subject'][$i][$j]="no subject";
+    //             }
+    //             else{
+
+    //               $subject=$this->DataModel->getmodelSubject($has_subject['subject'][$i][$j][0]['f_subject_id']);
+    //               $has_subject['subject'][$i][$j]=$subject[0]['sub_name'];
+    //             }
+    //         $j++;
+    //          }
+           
+
+          
+    //       $i++;
+    //     }  
+    // echo json_encode($has_subject);
+  }
+
+
 
   // public function getassignsubjectdata()
   // {
@@ -636,7 +949,109 @@ class dataController extends CI_Controller {
 	}
 
 
+  public function excelexport()
+	{
 
+        $course_id = $this->input->get('course_id');
+        $sem_id = $this->input->get('sem_id');
+        $header=array();
+        $header2=array();
+        $student=array();
+         // $headerData = $this->DataModel->get_Header($course_id,$sem_id);
+        $headerData = $this->DataModel->get_Header($course_id,$sem_id);
+        // echo json_encode($headerData);
+        // exit;
+        $usersData = $this->DataModel->get_Studentxl($course_id,$sem_id);
+        // file name 
+
+		$filename =$usersData[0]['crse_name'].'_'.$usersData[0]['semester_name'].'.csv'; 
+
+		 header("Content-Description: File Transfer"); 
+		 header("Content-Disposition: attachment; filename=$filename"); 
+		 header("Content-Type: application/csv; ");
+     // get data 
+
+    //$usersData = $this->DataModel->get_Course($course_id);
+    //  json_encode($usersData);
+    // exit;
+		// file creation 
+
+		 $file = fopen('php://output','w');
+     $header['0']="UserId";
+     $header['1']="Admission No";
+     $header['2']="First Name";
+     $header['3']="Last Name";
+     $header['4']="Email Id";
+     $header['5']="Course";
+     $header['6']="Semester";
+     $i=7;
+    foreach ($headerData as $key=>$hdata){ 
+      $header[$i]=$hdata['f_subject_id'];
+      $i++;
+      $header[$i]=$hdata['sub_name'];
+      $i++;
+       // echo json_encode($hdata['f_subject_id']);
+
+    }
+		 // $header = array("UserId","Admission No","First Name","Last Name","Email Id","Course","Semester"); 
+		fputcsv($file, $header);
+
+
+     $header2['0']="";
+     $header2['1']="";
+     $header2['2']="";
+     $header2['3']="";
+     $header2['4']="";
+     $header2['5']="";
+     $header2['6']="";
+     $i=7;
+    foreach ($headerData as $key=>$hdata){ 
+      $header2[$i]="external";
+      $i++;
+      $header2[$i]="internal";
+      $i++;
+       // echo json_encode($hdata['f_subject_id']);
+
+    }
+
+    fputcsv($file, $header2);
+
+		foreach ($usersData as $key=>$line){ 
+
+      $student['user_id']=$line['user_id'];
+      $student['admssn_no']=$line['admssn_no'];
+      $student['firstname']=$line['first_name'];
+      $student['lastname']=$line['last_name'];
+      $student['email_id']=$line['emailid'];
+      $student['course']=$line['crse_name'];
+      $student['semester']=$line['semester_name'];
+      // echo json_encode($student);
+			fputcsv($file,$student); 
+		}
+		 fclose($file); 
+		exit; 
+        // $this->load->library("excel");
+        // $object = new PHPExcel();
+        // $object->setActiveSheetIndex(0);
+        // $table_columns = array("AdmnNo", "First Name", "Last Name");
+        // $column = 0;
+        // foreach($table_columns as $field)
+        // {
+        //  $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+        //  $column++;
+        // }
+        // // $excel_data = $this->excel_export_model->fetch_data();
+        // // $data=array(
+        // //   'sub_name' => $subjectname,
+        // // );
+        // // $result = $this->DataModel->addsub($data);  
+        // // echo json_encode($result);
+        // $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+        // header('Content-Type: application/vnd.ms-excel');
+        // header('Content-Disposition: attachment;filename="StudentData.xls"');
+        // $object_writer->save('php://output');
+        
+	}
 
 	public function addsub()
 	{
@@ -653,8 +1068,10 @@ class dataController extends CI_Controller {
   {
 
         $coursename = $this->input->post('crsename');
+        $duration = $this->input->post('no_of_yr');
         $data=array(
           'crse_name' => $coursename,
+          'duration' => $duration,
         ); 
         $result=$this->DataModel->addcourse($data);
         echo json_encode($result);
@@ -738,6 +1155,19 @@ class dataController extends CI_Controller {
         $result = $this->DataModel->addday($data);  
         echo json_encode($result);
   }
+
+  public function addyear()
+	{
+
+        $year = $this->input->post('year');
+        $data=array(
+          'year' => $year,
+        );
+        $result = $this->DataModel->addyear($data);  
+        echo json_encode($result);
+  }
+
+
   public function addperiod()
 	{
 
@@ -795,8 +1225,10 @@ class dataController extends CI_Controller {
   {
         $course_id = $this->input->post('id');
         $course_name = $this->input->post('course_name');
+        $duration = $this->input->post('no_of_year');
         $data=array(
-          'crse_name' => $course_name
+          'crse_name' => $course_name,
+          'duration' => $duration
         );
         $result=$this->DataModel->courseUpdate($data,$course_id);
         echo json_encode($result);
@@ -878,7 +1310,12 @@ class dataController extends CI_Controller {
         $result=$this->DataModel->getmodelDay($day_id);
         echo json_encode($result);
   }
-
+  public function getmodelyear()
+  {
+        $year_id = $this->input->post('year_id');
+        $result=$this->DataModel->getmodelYear($year_id);
+        echo json_encode($result);
+  }
   public function getmodelperiod()
   {
         $period_id = $this->input->post('period_id');
@@ -896,6 +1333,17 @@ class dataController extends CI_Controller {
         $result=$this->DataModel->dayUpdate($data,$day_id);
         echo json_encode($result);
   }
+
+  public function yearupdate()
+  {
+        $year_id = $this->input->post('id');
+        $year = $this->input->post('yr');
+        $data=array(
+          'year' => $year
+        );
+        $result=$this->DataModel->yearUpdate($data,$year_id);
+        echo json_encode($result);
+  }
   public function periodupdate()
   {
         $period_id = $this->input->post('id');
@@ -909,7 +1357,12 @@ class dataController extends CI_Controller {
         echo json_encode($result);
   }
 
-
+  public function getmarklist()
+  {
+        $user_id = $this->input->get('user_id');
+        $result=$this->DataModel->getMarklist($user_id);
+        echo json_encode($result);
+  }
 }
 
 

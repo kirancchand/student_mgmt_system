@@ -90,7 +90,7 @@ $this->load->view('components/sidemenu');
               <i class="fa fa-times"></i></button>
           </div>
         </div>
-        <form id='assignsubjectform' name='assignsubjectform'> 
+        <form id='studentform' name='studentform' action="<?php echo site_url(); ?>/mdata/excelexport"> 
         <div class="box-body">
             <div class="row">
             <div class="col-xs-5">
@@ -124,7 +124,17 @@ $this->load->view('components/sidemenu');
                 </select>
             </div>
             </div>
-  
+            <br/>
+            <div class="row">
+            <div class="col-xs-5">
+            <button type="submit" class="btn btn-block btn-primary excelexport">Export Student List</button>
+            <button type="button" class="btn btn-block btn-primary movesem">Move to next Semester</button>
+            </div>
+            </div>
+            <div class="box-footer">
+            
+            </div>
+          
 
         </div>
       </form>
@@ -154,15 +164,12 @@ $this->load->view('components/sidemenu');
         <div class="form-group">
          <table class="table table-bordered" id="mytable">
            <thead>
-            <tr>
             <th style="width: 10px">slno</th>
             <th>Admn No</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <!-- <th>Course</th>
-            <th>Semester</th> -->
-            <th>Actions</th>
-            </tr>
+            <th>Course</th>
+            <th>Semester</th>
           </thead>
           <tbody>
   
@@ -238,30 +245,163 @@ $this->load->view('components/sidebarcontroller');
 </script>
 <script>
   $(document).ready(function() {
+      
 
-$('.assign_subject').click(function(){
+      var table = $('#mytable').DataTable( {
+      processing: true,
+
+      
+      "ajax": {
+            // "url":'../../public/object.txt',
+            "url":"<?php echo site_url(); ?>/tdata/getstudentdata",
+            "type": "GET"
+        },
+        "columns": [
+            { "data": "user_id" },
+            { "data": "admssn_no" },
+            { "data": "first_name" },
+            { "data": "last_name" },
+            { "data": "crse_name" },
+            { "data": "semester_name" },
+  
+        ],
+        "order": [[1, 'asc']],
+        
+        "fnDrawCallback": function(oSettings){
+
+        }
+       
+    } );
+          // $('#mytable').DataTable({ 
+
+          //   "processing": true, //Feature control the processing indicator.
+          //   "serverSide": true, //Feature control DataTables' server-side processing mode.
+          //   "order": [], //Initial no order.
+
+          //   // Load data for the table's content from an Ajax source
+          //   "ajax": {
+          //       "url": "<?php echo site_url("tdata/getstudentdata")?>",
+          //       "type": "GET",
+          //   },
+          //   //Set column definition initialisation properties.
+          //   "columnDefs": [
+          //   { 
+          //       "targets": [ -1 ], //last column
+          //       "orderable": false, //set not orderable
+          //   },
+          //   ],
+          //   "fnDrawCallback": function(oSettings){
+
+
+
+          //        }//fnDrawCallback
+
+          //        });
+    // $('.excelexport').click(function(){
+
+     
+    //       $.ajax({
+    //                 type: "POST",
+    //                 url: "<?php echo site_url(); ?>/mdata/excelexport",
+    //                 data: $('#excelform').serialize(),
+    //                 dataType: "json",
+    //                 success: function(response){
+                       
+    //                   //  console.log(response);
+                       
+    //                     //console.log(response.status);
+    //                     if(response==true) //if success close modal and reload ajax table
+    //                       {                     
+    //                        toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
+    //                        $('#course_id').val('').trigger("change");
+    //                        $('#sem_id').val('').trigger("change");
+    //                         $('.select2').val('').trigger("change");
+
+    //                         //  $('#assignsubjectform')[0].reset();
+    //                         //  $(".select2").multiselect('clearSelection');
+                            
+    //                         // $(".select2")[0].selectedIndex = 0;
+                            
+    //                        //$("#bin_number").multiselect('clearSelection');
+    //                       }
+    //                     else
+    //                       { 
+    //                         toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
+
+    //                       }
+                        
+                       
+    //                     },
+    //                     error: function(xhr, textStatus, error) {
+    //                       console.log(xhr.statusText);
+    //                       console.log(textStatus);
+    //                       console.log(error);
+
+
+    //                     }
+    //                 })
+
+
+    // });
+// $('.excelexport').click(function(){
+
+//                 $.ajax({
+//                     type: "POST",
+//                     url: "<?php echo site_url(); ?>/menu/exportStudent",
+//                     data: $('#studentform').serialize(),
+//                     dataType: "json",
+//                     success: function(response){
+                       
+//                         if(response==true) //if success close modal and reload ajax table
+//                           {                     
+//                            toastr.success('Moved Successfully..!!', 'Success Alert', {timeOut: 2000});
+//                            $('#course_id').val('').trigger("change");
+//                            $('#sem_id').val('').trigger("change");
+//                           }
+//                         else
+//                           { 
+//                             toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
+
+//                           }
+                        
+                       
+//                         },
+//                         error: function(xhr, textStatus, error) {
+//                           console.log(xhr.statusText);
+//                           console.log(textStatus);
+//                           console.log(error);
+
+
+//                         }
+//                     })
+          
+//           });
+
+
+$('.movesem').click(function(){
 
 //alert("hyy");
 //alert($('#starttime').val());
-            
+         // alert($('#sem_id').val());   
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo site_url(); ?>/data/assignsubject",
-                    data: $('#assignsubjectform').serialize(),
+                    url: "<?php echo site_url(); ?>/student/movesem",
+                    data: $('#studentform').serialize(),
                     dataType: "json",
                     success: function(response){
-                       
-                      //  console.log(response);
+                       //  9400789989
+                        console.log(response);
                        
                         //console.log(response.status);
                         if(response==true) //if success close modal and reload ajax table
                           {                     
-                           toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
+                           toastr.success('Moved Successfully..!!', 'Success Alert', {timeOut: 2000});
                            $('#course_id').val('').trigger("change");
                            $('#sem_id').val('').trigger("change");
-                            $('.select2').val('').trigger("change");
+                           table.ajax.reload(null,false); 
+                           //  $('.select2').val('').trigger("change");
 
-                            //  $('#assignsubjectform')[0].reset();
+                             // $('#studentform')[0].reset();
                             //  $(".select2").multiselect('clearSelection');
                             
                             // $(".select2")[0].selectedIndex = 0;
@@ -292,159 +432,50 @@ $('.assign_subject').click(function(){
 
 
 
-          $('#sem_id').change(function(){
-            table.ajax.reload(null,false); //reload datatable ajax 
-//alert("hyy");
-//alert($('#starttime').val());
-            // var course_id=$('#course_id').val();
-            // var sem_id=$('#sem_id').val();
-            // // alert(course_id);
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "<?php echo site_url(); ?>/mdata/getsemstudent",
-            //         data: {'course_id':course_id,'sem_id':sem_id},
-            //         dataType: "json",
-            //         success: function(response){
-                       
+          // $('#sem_id').change(function(){
+          //   var course_id=$('#course_id').val();
+          //   var sem_id=$('#sem_id').val(); 
+          //   // table.ajax.reload(null,false); //reload datatable ajax 
+
+
+          // $('#mytable').DataTable({ 
+
+          //   "processing": true, //Feature control the processing indicator.
+          //   "serverSide": true, //Feature control DataTables' server-side processing mode.
+          //   "order": [], //Initial no order.
+
+          //   // Load data for the table's content from an Ajax source
+          //   "ajax": {
+          //       "url": "<?php echo site_url("tdata/getstudentdata")?>",
+          //       "type": "GET",
+          //       "data": {
+          //          "course_id": course_id,
+          //          "sem_id":sem_id
+          //        }
+          //   },
+          //   //Set column definition initialisation properties.
+          //   "columnDefs": [
+          //   { 
+          //       "targets": [ -1 ], //last column
+          //       "orderable": false, //set not orderable
+          //   },
+          //   ],
+          //   "fnDrawCallback": function(oSettings){
+
+
+
+          //        }//fnDrawCallback
+
+          //        });
+
+
                       
-                        
-          
-                      
-                        
-                       
-            //             },
-            //             error: function(xhr, textStatus, error) {
-            //               console.log(xhr.statusText);
-            //               console.log(textStatus);
-            //               console.log(error);
+          //             });
+             //datatables
+
+ 
 
 
-            //             }
-            //         })
-          
-          });
- //datatables
- var course_id=$('#course_id').val();
-  var sem_id=$('#sem_id').val();
- var table = $('#mytable').DataTable({ 
-
- "processing": true, //Feature control the processing indicator.
- "serverSide": true, //Feature control DataTables' server-side processing mode.
- "order": [], //Initial no order.
-
- // Load data for the table's content from an Ajax source
- "ajax": {
-     "url": "<?php echo site_url("tdata/getstudentdata")?>",
-     "type": "GET",
-     "data": {'course_id':course_id,'sem_id':sem_id},
- },
-
- //Set column definition initialisation properties.
- "columnDefs": [
- { 
-     "targets": [ -1 ], //last column
-     "orderable": false, //set not orderable
- },
- ],
- "fnDrawCallback": function(oSettings){
-
-
-   $('.updateview_btn').click(function(){
-             
-//                       $(".update_btn").show();
-                   var sub_id=$(this).attr('id'); 
-         
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/getmodelsubject",
-             dataType : "json",
-             data: {"sub_id" : sub_id},
-             success: function(response){
-
-                   console.log(response);
-                   $('#subject_name').val(response[0].sub_name);
-                   $('#id').val(response[0].sub_id);
-                   $('#id').hide();
-            
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-    });//update view in modal
-
-$('.delete_btn').click(function(){
-             
-//                       $(".update_btn").show();
-                   var sub_id=$(this).attr('id'); 
-         
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/subjectdelete",
-             dataType : "json",
-             data: {"sub_id" : sub_id},
-             success: function(response){
-
-              if(response==true) //if success close modal and reload ajax table
-                       {
-                      
-                       toastr.success('deleted Successfully..!!', 'Success Alert', { timeOut: 3000 });    
-                       table.ajax.reload(null,false); //reload datatable ajax 
-                 
-                       }
-                     else{
-                     
-                       toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-                     }
-            
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-    });//update view in modal
-$('.update_btn').click(function(){
-     
-         $.ajax({
-             type: "POST",
-             url: "<?php echo site_url(); ?>/mdata/subjectupdate",
-             data: $('#updatesubjectform').serialize(),
-             dataType: "json",
-             success: function(response){
-             // alert(response);  
-
-                  console.log(response);
-                 if(response==true) //if success close modal and reload ajax table
-                   {
-                  $("#myModal").modal("hide");
-                   toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
-                   table.ajax.reload(null,false); //reload datatable ajax 
-             
-                   }
-                 else{
-                    $("#myModal").modal("hide");
-                   toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
-                 }
-
-                 },
-                 error: function(xhr, textStatus, error) {
-                   console.log(xhr.statusText);
-                   console.log(textStatus);
-                   console.log(error);
-                 }
-             })
-   
-        });//update action
-
-      }//fnDrawCallback
-
-      });
 
 
 

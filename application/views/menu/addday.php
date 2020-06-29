@@ -228,6 +228,7 @@ $this->load->view('components/sidebarcontroller');
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
   $(document).ready(function() {
+    alert("hyy");
    $('.add_day').click(function(){
                 $.ajax({
                     type: "POST",

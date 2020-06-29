@@ -246,11 +246,7 @@ $this->load->view('components/sidemenu');
             ?>
             <input type="hidden" value="<?php echo $i; ?>" id="period_count"/>
             </tr>
-            <tr id="classtimetbl">
-             
-             </tr>
-           
-           
+
           </thead>
           <tbody>
   
@@ -274,50 +270,6 @@ $this->load->view('components/sidemenu');
 <!-- /.box -->
 
 </section>
-
-
-
-
-<form name="updatesubjectform" id="updatesubjectform">
-  <!-- /.content-wrapper -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Update Subject</h4>
-      </div>
-      <div class="modal-body">
-        <p>
-          <div class="form-group has-feedback">
-            <label>Subject Name</label>
-        <input type="text" name="subject_name" id="subject_name" class="form-control"  required="required" autofocus="autofocus">
-        </div>
-        <div class="form-group has-feedback">
-         <!-- <label>id</label> -->
-        <input type="text" name="id" id="id" class="form-control">
-        </div>
-
-        </p>
-      </div>
-
-
-      <div class="modal-footer">
-        <div class="btn-group">
-          <button type="button" class="btn btn-info update_btn">Update</button></div>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-</form>
-
-
-
-
 
 
 
@@ -380,7 +332,11 @@ $this->load->view('components/sidebarcontroller');
    
       
     //   });//update action
-
+    $('#course_id').val(''); 
+    $('#sem_id').val(''); 
+    $('#day_id').val(''); 
+    $('#period_id').val(''); 
+    $('#subject_id').val(''); 
    $('.assign_subject').click(function(){
             
                 $.ajax({
@@ -389,12 +345,14 @@ $this->load->view('components/sidebarcontroller');
                     data: $('#classtimetblform').serialize(),
                     dataType: "json",
                     success: function(response){
-                  // alert(response);
+                  console.log(response);
                         if(response==true) //if success close modal and reload ajax table
                           {
                           toastr.success('Created Successfully..!!', 'Success Alert', { timeOut: 3000 }); 
-
-                          // table.ajax.reload(null,false); //reload datatable ajax 
+                          // $('#classtimetblform')[0].reset(); 
+                          setTimeout(function(){// wait for 5 secs(2)
+                                 location.reload(); // then reload the page.(3)
+                            }, 3000); 
                           }
                         else{
                           toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
@@ -414,6 +372,7 @@ $this->load->view('components/sidebarcontroller');
             var course_id = $('#course_id').val(); 
             var sem_id = $('#sem_id').val(); 
             var period_count = $('#period_count').val(); 
+            console.log(sem_id);
             $.ajax({
                 type: "POST",
                 url: "<?php echo site_url(); ?>/tdata/gettimetbldata",
@@ -421,35 +380,45 @@ $this->load->view('components/sidebarcontroller');
                 dataType: "json",
                 success: function(response){
                   // <tr id="classtimetbl">
-                  // console.log(response);
+                  console.log(response);
+                  $('tbody #classtimetbl').remove();
+                  $.each(response['data'], function(index, value) {
+
+                      console.log(value['day']);
+                     $('tbody').append("<tr id="+value['day']+"><td>"+value['day']+"</td></tr>");
+                     $.each(value['timetbl'], function(i, v) {
+                      $('#'+value['day']).append("<td>"+v['sub_name']+"</td>");
+
+                     });
+                  });
                   // console.log(response['subject'][0]);
 
-                  $('#classtimetbl').remove();
-                  $('#mytable').append("<tr id='classtimetbl'></tr>")
-                  $.each(response['day'], function(index, value) {
+                  // $('tbody #classtimetbl').remove();
+                  // $('#mytable tbody').append("<tr id='classtimetbl'></tr>")
+                  // $.each(response['day'], function(index, value) {
                     
-                    // sconsole.log(index);
-                    $('#classtimetbl').append("<tr id="+index+"><td>"+value+"</td>");
-                   
-                    $.each(response['subject'][index], function(sub_index, value) {
-                      $('#'+index).append("<td>"+value+"</td>");
-                      console.log(value);
-                    });
-                    $('#'+index).append("</tr>");
-                    // for(var i=0;i<period_count;i++)
-                    // {
+                  //   // sconsole.log(index);
+                  //   // $('tbody').append("<tr id="+index+"><td>"+value+"</td>");
+                  //   $('tbody').append("<tr id="+index+"><td>"+value+"</td>");
+                  //   $.each(response['subject'][index], function(sub_index, value) {
+                  //     $('#'+index).append("<td>"+value+"</td>");
+                  //     console.log(value);
+                  //   });
+                  //   $('#'+index).append("</tr>");
+                  //   // for(var i=0;i<period_count;i++)
+                  //   // {
                       
-                    // }
+                  //   // }
                    
-                    // $.each(period_count, function(count_index) {
-                    //   console.log(count_index)
-                    // });
-                    // $('#'+index).append("</tr>");
-                    // $('#classtimetbl').append("<tr><td>"+value['day_name']+"</td>")
-                    // $(this).closest('tr').append("<td>"+index+"</td></tr>")
-                  // console.log(index)
+                  //   // $.each(period_count, function(count_index) {
+                  //   //   console.log(count_index)
+                  //   // });
+                  //   // $('#'+index).append("</tr>");
+                  //   // $('#classtimetbl').append("<tr><td>"+value['day_name']+"</td>")
+                  //   // $(this).closest('tr').append("<td>"+index+"</td></tr>")
+                  // // console.log(index)
                        
-                  });
+                  // });
 
 
                   

@@ -94,6 +94,22 @@
           </select>
       </div>
       </div>
+      <br/>
+      <div class="row">
+      <div class="col-xs-12">
+          <select  id="f_year_id" name="f_year_id"  class="form-control" style="width: 100%;">
+          <option selected="selected" value=''>Please Select Year of Joining</option>
+          <?php
+            foreach ($year as $key => $value)
+            {
+          ?>
+            <option value='<?php echo $value['year_id']; ?>'><?php echo $value['year'] ;?></option>
+          <?php
+            }
+          ?>
+          </select>
+      </div>
+      </div>
             <br/>
       <div class="form-group has-feedback">
       <input type="text" id="admn_no" name="admn_no" class="form-control" placeholder="admission No" >

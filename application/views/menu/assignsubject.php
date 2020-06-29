@@ -42,6 +42,29 @@
   <![endif]-->
  <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
  <link rel="stylesheet" href="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.css">
+ <style type="text/css">
+
+label.error{
+    width: 100%;
+    color: red;
+    font-style: italic;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+input.error {
+    border: 1px dotted red;
+}
+select.error {
+    border: 1px dotted red;
+}
+td.details-control {
+    background: url('../../public/media/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../../public/media/details_close.png') no-repeat center center;
+}
+ </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -153,7 +176,7 @@ $this->load->view('components/sidemenu');
         <div class="box-footer">
          <div class="row">
                   <div class="col-xs-2">
-                  <button type="button" class="btn btn-block btn-primary assign_subject">Assign</button>
+                  <button type="button" class="btn btn-block btn-primary assign_subject">Assign/Reassign</button>
                   </div>
                </div>
         </div>
@@ -184,10 +207,10 @@ $this->load->view('components/sidemenu');
          <table class="table table-bordered" id="mytable">
            <thead>
             <tr>
-            <th style="width: 10px">slno</th>
+            <th></th>
             <th>Course Name</th>
-            <th>Subject Name</th>
-            <th>Actions</th>
+            <th>Semester Name</th>
+            <!-- <th>Actions</th> -->
             </tr>
           </thead>
           <tbody>
@@ -252,23 +275,54 @@ $this->load->view('components/sidebarcontroller');
 <script src="<?php echo base_url(); ?>public/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url(); ?>public/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
-  $(function () {
-    //Initialize Select2 Elements
-    $(".select2").select2();
-    //Timepicker
-    $(".timepicker").timepicker({
-      showInputs: false
-    });
 
-  });
-</script>
-<script>
-  $(document).ready(function() {
+/* Formatting function for row details - modify as you need */
 
-$('.assign_subject').click(function(){
+$(".select2").select2();
+function format ( d ) {
+  // console.log(d);
+  // var username;
+//   const username =  $.each(d.username,function(index,value){
+//     // console.log(value['username']);
+//     return(value['username']);
+//       });
+//  console.log(username[0]['username']);
 
-//alert("hyy");
-//alert($('#starttime').val());
+// return username.join('');
+var i=1;
+const subject = $.map(d.subject, function(value) {
+  // console.log(value);
+    // return('<td>'+ i++ +')' +'</td><td>' + value['username'] + '</td>');
+    return value['sub_name'] ;
+});
+
+// return username;
+// const getData = async () => {
+//   return Promise.all(d.username.map(item => anAsyncFunction(item)))
+// }
+
+// getData().then(data => {
+//   console.log(data)
+// })
+
+
+    // `d` is the original data object for the row
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>'+
+            '<td style="padding-right:50px;">Subjects:</td>'+
+            '<td>' + subject.join(' / ') + '</td>'+
+        '</tr>'+
+    '</table>';
+}
+ 
+
+$(document).ready(function() {
+
+  $('#course_id').val('');
+  $('#sem_id').val('');
+  $('.select2').val('').trigger("change");
+  $('.assign_subject').click(function(){
+
             
                 $.ajax({
                     type: "POST",
@@ -277,7 +331,7 @@ $('.assign_subject').click(function(){
                     dataType: "json",
                     success: function(response){
                        
-                      //  console.log(response);
+                       console.log(response);
                        
                         //console.log(response.status);
                         if(response==true) //if success close modal and reload ajax table
@@ -286,7 +340,9 @@ $('.assign_subject').click(function(){
                            $('#course_id').val('').trigger("change");
                            $('#sem_id').val('').trigger("change");
                             $('.select2').val('').trigger("change");
-
+                            setTimeout(function(){// wait for 5 secs(2)
+                                 location.reload(); // then reload the page.(3)
+                            }, 3000);
                             //  $('#assignsubjectform')[0].reset();
                             //  $(".select2").multiselect('clearSelection');
                             
@@ -313,12 +369,12 @@ $('.assign_subject').click(function(){
           
           });
 
+  $('#course_id').change(function(){
+    $('#sem_id').val('');
+    $('.select2').val('').trigger("change");
 
-
-
-
-
-          $('#sem_id').change(function(){
+  });
+  $('#sem_id').change(function(){
 
 //alert("hyy");
 //alert($('#starttime').val());
@@ -349,33 +405,8 @@ $('.assign_subject').click(function(){
                         // $(".select").multiselect('refresh');
                        
                         });
-                        $('.select2').val(Values);
-                        
-          
-                       
+                        $('.select2').val(Values).trigger("change");
 
-            
-              
-
-     
-
-                        //console.log(response.status);
-                        // if(response==true) //if success close modal and reload ajax table
-                        //   {                     
-                        //    toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
-                        //      $('#assignsubjectform')[0].reset();
-                        //     //  $(".select2").multiselect('clearSelection');
-                            
-                        //     // $(".select2")[0].selectedIndex = 0;
-                            
-                        //    //$("#bin_number").multiselect('clearSelection');
-                        //   }
-                        // else
-                        //   { 
-                        //     toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
-
-                        //   }
-                        
                        
                         },
                         error: function(xhr, textStatus, error) {
@@ -388,6 +419,305 @@ $('.assign_subject').click(function(){
                     })
           
           });
+
+
+
+
+
+ 
+
+
+  
+    var table = $('#mytable').DataTable( {
+      processing: true,
+
+      
+      "ajax": {
+            // "url":'../../public/object.txt',
+            "url":"<?php echo site_url(); ?>/tdata/getassignsubjectdata",
+            "type": "GET"
+        },
+        "columns": [
+            {
+                "className":'details-control',
+                "orderable":false,
+                "data":null,
+                "defaultContent": ''
+            },
+            { "data": "course" },
+            { "data": "sem" },
+  
+            // { "data": "btn" }
+           
+            // { "data": "name" },
+            // { "data": "position" },
+            // { "data": "office" },
+            // { "data": "salary" }
+        ],
+      //   "columnDefs": [
+      //    {
+      //     "targets": 3,
+      //     "data": "id",
+      //     "searchable": true,
+      //     "orderable": false,
+      //     "render": function ( data, type, row, meta ) {
+      //       return "<button type='button' id="+data+" data-toggle='modal' data-target='#myModal' class='btn btn-info updateview_btn'>update/view</button>";
+      //     }
+      //     // "defaultContent": "<button type='button' id='1' data-toggle='modal' data-target='#myModal' class='btn btn-info updateview_btn'>update/view</button>"
+        
+            
+      //    }
+      // ],
+        "order": [[1, 'asc']],
+        
+        "fnDrawCallback": function(oSettings){
+
+
+          $('.updateview_btn').click(function(){
+             
+             //                       $(".update_btn").show();
+                                var sub_id=$(this).attr('id'); 
+                      
+                      $.ajax({
+                          type: "POST",
+                          url: "<?php echo site_url(); ?>/mdata/getmodelsubject",
+                          dataType : "json",
+                          data: {"sub_id" : sub_id},
+                          success: function(response){
+             
+                                console.log(response);
+                                $('#subject_name').val(response[0].sub_name);
+                                $('#id').val(response[0].sub_id);
+                                $('#id').hide();
+                         
+                              },
+                              error: function(xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                              }
+                          })
+                
+                 });//update view in modal
+
+        }
+       
+    } );
+     
+    // Add event listener for opening and closing details
+    $('#mytable tbody').on('click', 'td.details-control', function () {
+      // const username = $.map(d.username, function(value) {
+      //     return('<td>' + value['username'] + '</td>');
+      // });
+      // console.log();
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+        
+           
+                row.child( 
+                format(row.data())
+                ).show();
+            tr.addClass('shown');
+        }
+
+
+    } );
+  
+
+
+    $('.delete_btn').click(function(){
+             
+             //                       $(".update_btn").show();
+                                var sub_id=$(this).attr('id'); 
+                      
+                      $.ajax({
+                          type: "POST",
+                          url: "<?php echo site_url(); ?>/mdata/subjectdelete",
+                          dataType : "json",
+                          data: {"sub_id" : sub_id},
+                          success: function(response){
+             
+                           if(response==true) //if success close modal and reload ajax table
+                                    {
+                                   
+                                    toastr.success('deleted Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                                    table.ajax.reload(null,false); //reload datatable ajax 
+                              
+                                    }
+                                  else{
+                                  
+                                    toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                                  }
+                         
+                              },
+                              error: function(xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                              }
+                          })
+                
+                 });//update view in modal
+             $('.update_btn').click(function(){
+                  
+                      $.ajax({
+                          type: "POST",
+                          url: "<?php echo site_url(); ?>/mdata/subjectupdate",
+                          data: $('#updatesubjectform').serialize(),
+                          dataType: "json",
+                          success: function(response){
+                          // alert(response);  
+             
+                               console.log(response);
+                              if(response==true) //if success close modal and reload ajax table
+                                {
+                               $("#myModal").modal("hide");
+                                toastr.success('Updated Successfully..!!', 'Success Alert', { timeOut: 3000 });    
+                                table.ajax.reload(null,false); //reload datatable ajax 
+                          
+                                }
+                              else{
+                                 $("#myModal").modal("hide");
+                                toastr.error('Error..!!', 'Danger Alert', { timeOut: 3000 });    
+                              }
+             
+                              },
+                              error: function(xhr, textStatus, error) {
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                              }
+                          })
+                
+                     });//update action
+
+} );
+
+
+</script>
+</body>
+</html>
+
+<!-- 
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+
+  });
+</script>
+<script>
+  $(document).ready(function() {
+
+// $('.assign_subject').click(function(){
+
+// //alert("hyy");
+// //alert($('#starttime').val());
+            
+//                 $.ajax({
+//                     type: "POST",
+//                     url: "<?php echo site_url(); ?>/data/assignsubject",
+//                     data: $('#assignsubjectform').serialize(),
+//                     dataType: "json",
+//                     success: function(response){
+                       
+//                       //  console.log(response);
+                       
+//                         //console.log(response.status);
+//                         if(response==true) //if success close modal and reload ajax table
+//                           {                     
+//                            toastr.success('Added Successfully..!!', 'Success Alert', {timeOut: 2000});
+//                            $('#course_id').val('').trigger("change");
+//                            $('#sem_id').val('').trigger("change");
+//                             $('.select2').val('').trigger("change");
+
+//                             //  $('#assignsubjectform')[0].reset();
+//                             //  $(".select2").multiselect('clearSelection');
+                            
+//                             // $(".select2")[0].selectedIndex = 0;
+                            
+//                            //$("#bin_number").multiselect('clearSelection');
+//                           }
+//                         else
+//                           { 
+//                             toastr.success('Some Error Happened..!!', 'Danger Alert', {timeOut: 2000});
+
+//                           }
+                        
+                       
+//                         },
+//                         error: function(xhr, textStatus, error) {
+//                           console.log(xhr.statusText);
+//                           console.log(textStatus);
+//                           console.log(error);
+
+
+//                         }
+//                     })
+          
+//           });
+
+
+
+
+
+
+//           $('#sem_id').change(function(){
+
+// //alert("hyy");
+// //alert($('#starttime').val());
+//             var course_id=$('#course_id').val();
+//             var sem_id=$('#sem_id').val();
+//             // alert(course_id);
+//                 $.ajax({
+//                     type: "POST",
+//                     url: "<?php echo site_url(); ?>/mdata/getassignsubject",
+//                     data: {'course_id':course_id,'sem_id':sem_id},
+//                     dataType: "json",
+//                     success: function(response){
+                       
+//                        console.log(response);
+
+      
+//                        var Values = new Array();
+//                       //  $(".select2").remove();
+//                       //  $("#subjectdiv").append( 
+//                       //   '<select id="subject[]" name="subject[]" multiple="multiple" class="form-control select2" data-placeholder="Select subject" style="width: 100%;">'+
+//                       //   '<option value="" id="option">--please select--</option>'
+//                       //  );
+//                        $.each(response, function(index, value) {
+//                         console.log(value.f_subject_id);
+//                         Values.push(value.f_subject_id);
+//                         // 
+//                         // Will stop running after "three"
+//                         // $(".select").multiselect('refresh');
+                       
+//                         });
+//                         $('.select2').val(Values);
+
+                       
+//                         },
+//                         error: function(xhr, textStatus, error) {
+//                           console.log(xhr.statusText);
+//                           console.log(textStatus);
+//                           console.log(error);
+
+
+//                         }
+//                     })
+          
+//           });
  //datatables
  var table = $('#mytable').DataTable({ 
  
@@ -514,4 +844,4 @@ $('.update_btn').click(function(){
 });
 </script>
 </body>
-</html>
+</html> -->

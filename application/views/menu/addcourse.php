@@ -79,7 +79,11 @@ $this->load->view('components/sidemenu');
         <div class="box-body">
         
           <div class="col-xs-5">
-              <input type="crsename" id="crsename" name="crsename" class="form-control" type="text" placeholder="Enter course">
+              <input id="crsename" name="crsename" class="form-control" type="text" placeholder="Enter course">
+                    
+          </div>
+          <div class="col-xs-5">
+              <input id="no_of_yr" name="no_of_yr" class="form-control" type="text" placeholder="Enter duration">
                     
           </div>
           <div class="col-xs-2">
@@ -120,6 +124,7 @@ $this->load->view('components/sidemenu');
             <tr>
             <th style="width: 10px">slno</th>
             <th>Course Name</th>
+            <th>Course Duration</th>
             <th>Actions</th>
             </tr>
           </thead>
@@ -164,6 +169,11 @@ $this->load->view('components/sidemenu');
           <div class="form-group has-feedback">
             <label>Course Name</label>
         <input type="text" name="course_name" id="course_name" class="form-control"  required="required" autofocus="autofocus">
+        </div>
+        <div class="form-group has-feedback">
+            <label>Course Duration</label>
+            <input id="no_of_year" name="no_of_year" class="form-control" type="text" required="required">
+    
         </div>
         <div class="form-group has-feedback">
          <!-- <label>id</label> -->
@@ -287,6 +297,7 @@ $this->load->view('components/sidebarcontroller');
 
                    console.log(response);
                    $('#course_name').val(response[0].crse_name);
+                   $('#no_of_year').val(response[0].duration);
                    $('#id').val(response[0].crse_id);
                    $('#id').hide();
             
